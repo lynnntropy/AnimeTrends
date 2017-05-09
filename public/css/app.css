@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+body
+{
+    font-family: 'Open Sans', sans-serif;
+}
+
+div.main
+{
+    padding: 50px;
+}
+
+.sidebar
+{
+    background-color: #2F3133;
+
+    padding: 5px 0;
+
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.sidebar .anime-item
+{
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar .anime-item:hover
+{
+    background-color: #2ab27b;
+}
+
+.sidebar a
+{
+    color: #fff;
+    text-decoration: none;
+}
