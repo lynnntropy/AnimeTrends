@@ -5,14 +5,30 @@ body
     font-family: 'Open Sans', sans-serif;
 }
 
-div.main
+.home
 {
-    padding: 50px;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home .welcome-message
+{
+    text-align: center;
+    width: 500px;
+    font-size: 17px;
+}
+
+.home .welcome-message h1
+{
+    font-size: 45px;
 }
 
 .sidebar
 {
-    background-color: #2F3133;
+    background-color: #212121;
 
     padding: 5px 0;
 
@@ -33,11 +49,25 @@ div.main
 
 .sidebar .anime-item:hover
 {
-    background-color: #2ab27b;
+    background-color: #2196F3;
 }
 
 .sidebar a
 {
-    color: #fff;
+    color: #F5F5F5;
     text-decoration: none;
+}
+
+.anime-view
+{
+    padding: 50px;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.anime-view h1.anime-title
+{
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 50px;
 }

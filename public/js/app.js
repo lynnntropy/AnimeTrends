@@ -1,4 +1,22 @@
-angular.module('animeStocks', ['ngRoute', 'chart.js'])
+Chart.pluginService.register({
+    afterDraw: function(chartInstance) {
+        var ctx = chartInstance.chart.ctx;
+
+        // render the value of the chart above the bar
+        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+
+        chartInstance.data.datasets.forEach(function (dataset) {
+            for (var i = 0; i < dataset.data.length; i++) {
+                var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
+                ctx.fillText(dataset.data[i], model.x, model.y - 2);
+            }
+        });
+    }
+});
+
+angular.module('animeStocks', ['ngRoute', 'chart.js', 'ng-fusioncharts'])
 
     .factory('backendService', function ($http) {
 
@@ -16,26 +34,62 @@ angular.module('animeStocks', ['ngRoute', 'chart.js'])
             });
         };
 
+        var getAnime = function(animeId)
+        {
+            return $http.get('/api/anime/' + animeId).then(function (res) {
+                return res.data;
+            });
+        };
+
         return {
             getAnimeList: getAnimeList,
-            getHistoryForAnime: getHistoryForAnime
+            getHistoryForAnime: getHistoryForAnime,
+            getAnime: getAnime
         }
     })
 
-    .controller('SidebarController', function($scope, backendService) {
+    .controller('SidebarController', function($scope, $rootScope, backendService) {
         backendService.getAnimeList().then(function (data) {
             console.log(data);
             $scope.anime = data;
         });
+
+        $scope.selectAnime = function(anime)
+        {
+            $rootScope.selectedAnime = anime;
+        }
     })
 
     .controller('HomeController', function() {})
 
-    .controller('AnimeController', function($scope, $route, backendService) {
+    .controller('AnimeController', function($scope, $rootScope, $route, backendService) {
+
+        $scope.dataSource = {
+            "chart": {
+                "caption": "Column Chart Built in Angular!",
+                "captionFontSize": "30",
+                // more chart properties - explained later
+            },
+            "data": [{
+                "label": "CornflowerBlue",
+                "value": "42"
+            } //more chart data
+            ]
+        };
+
         $scope.data = [[], []];
         $scope.labels = [];
-        $scope.series = ['Avg. Rating', 'Members'];
-        $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
+        $scope.series = ['Average Rating', 'Members'];
+        $scope.datasetOverride = [
+            {
+                yAxisID: 'y-axis-1',
+                lineTension: 0
+            },
+            {
+                yAxisID: 'y-axis-2',
+                lineTension: 0
+            }];
+        $scope.colors = ['#2196f3', '#F44336', '#717984', '#F1C40F'];
         $scope.options = {
             scales: {
                 yAxes: [
@@ -44,12 +98,13 @@ angular.module('animeStocks', ['ngRoute', 'chart.js'])
                         type: 'linear',
                         display: true,
                         position: 'left',
-                        gridLines: {
-                            display:false
-                        },
                         ticks: {
                             min: 1,
                             max: 10
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Average Rating'
                         }
                     },
                     {
@@ -59,9 +114,17 @@ angular.module('animeStocks', ['ngRoute', 'chart.js'])
                         position: 'right',
                         gridLines: {
                             display:false
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Members'
                         }
                     }
                 ]
+            },
+
+            legend: {
+                display: true
             }
         };
 
@@ -72,7 +135,16 @@ angular.module('animeStocks', ['ngRoute', 'chart.js'])
                 $scope.data[1].push(snapshot.members);
                 $scope.labels.push(snapshot.created_at);
             });
-        })
+        });
+
+        if (!$rootScope.selectedAnime)
+        {
+            backendService.getAnime($route.current.params['animeId']).then(function (data) {
+                $rootScope.selectedAnime = data;
+            });
+        }
+
+        Chart.defaults.global.colors
     })
 
     .config(function($routeProvider, $locationProvider) {

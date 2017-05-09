@@ -11,7 +11,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-2 sidebar" ng-controller="SidebarController">
-            <a href="/anime/@{{item.id}}" ng-repeat="item in anime">
+            <a href="/anime/@{{item.id}}" ng-repeat="item in anime" ng-click="selectAnime(item)">
                 <div class="anime-item">
                     @{{item.title}}
                 </div>
@@ -29,6 +29,9 @@
 <script src="{{asset('node_modules/angular-route/angular-route.min.js')}}"></script>
 <script src="{{asset('node_modules/chart.js/dist/Chart.min.js')}}"></script>
 <script src="{{asset('node_modules/angular-chart.js/dist/angular-chart.min.js')}}"></script>
+<script src="{{asset('node_modules/fusioncharts/fusioncharts.js')}}"></script>
+<script src="{{asset('node_modules/fusioncharts/fusioncharts.charts.js')}}"></script>
+<script src="{{asset('js/angular-fusioncharts.min.js')}}"></script>
 <script src="{{asset('js/app.js')}}"></script>
 </body>
 </html>

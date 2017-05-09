@@ -19,6 +19,11 @@ class ApiController extends Controller
         return Anime::all();
     }
 
+    public function getAnime(Anime $anime)
+    {
+        return $anime;
+    }
+
     public function getSnapshotsForAnime(Anime $anime)
     {
         return $anime->snapshots;

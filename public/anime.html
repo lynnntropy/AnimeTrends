@@ -1,5 +1,11 @@
-<h1>{{}}</h1>
-
 <div class="anime-view">
-    <canvas class="chart chart-line" chart-data="data" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride"></canvas>
+    <h1 class="anime-title">{{selectedAnime.title}}</h1>
+    <canvas class="chart chart-line" chart-data="data" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-colors="colors"></canvas>
+
+    <!--<fusioncharts-->
+            <!--width= "100%"-->
+            <!--height= "400"-->
+            <!--type= "column2d"-->
+            <!--dataFormat= "json"-->
+            <!--dataSource= "{{dataSource}}">-->
 </div>
