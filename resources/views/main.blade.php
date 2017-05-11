@@ -13,7 +13,8 @@
         <div class="col-xs-2 sidebar" ng-controller="SidebarController">
             <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in anime" ng-click="selectAnime(item)">
                 <div class="anime-item">
-                    @{{item.title}}
+                    <p class="item-title">@{{item.title}}</p>
+                    <p class="item-members">Members: @{{item.members | thousandSuffix:1}}</p>
                 </div>
             </a>
         </div>
@@ -27,7 +28,6 @@
 <script src="{{asset('node_modules/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('node_modules/angular/angular.min.js')}}"></script>
 <script src="{{asset('node_modules/angular-route/angular-route.min.js')}}"></script>
-{{--<script src="{{asset('node_modules/highcharts/highcharts.js')}}"></script>--}}
 <script src="{{asset('node_modules/highcharts/highstock.js')}}"></script>
 <script src="{{asset('node_modules/highcharts-ng/dist/highcharts-ng.min.js')}}"></script>
 <script src="{{asset('js/angular-slugify.js')}}"></script>

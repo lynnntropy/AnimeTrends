@@ -27,6 +27,7 @@ class DatabaseUpdateManager
                 $newAnime->id = $item->id;
                 $newAnime->title = $item->title;
                 $newAnime->image = $item->imageUrl;
+                $newAnime->members = $item->members;
                 $newAnime->save();
             }
         }
@@ -38,6 +39,9 @@ class DatabaseUpdateManager
             $anime = Anime::find($item->id);
             if ($anime != null)
             {
+                $anime->members = $item->members;
+                $anime->save();
+
                 $snapshot = new Snapshot;
                 $snapshot->rating = $item->score;
                 $snapshot->members = $item->members;

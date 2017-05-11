@@ -42,9 +42,22 @@ body
     cursor: pointer;
     /*transition: background-color 0.1s ease;*/
 
+
+}
+
+.sidebar .anime-item .item-title
+{
+    margin-bottom: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.sidebar .anime-item .item-members
+{
+    margin: 0;
+    font-size: 10px;
+    opacity: 0.5;
 }
 
 .sidebar .anime-item:hover
