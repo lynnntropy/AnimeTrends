@@ -40,7 +40,7 @@ body
 {
     padding: 5px 10px;
     cursor: pointer;
-    transition: background-color 0.1s ease;
+    /*transition: background-color 0.1s ease;*/
 
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -60,9 +60,11 @@ body
 
 .anime-view
 {
-    padding: 50px;
+    padding-top: 50px;
     height: 100vh;
     overflow: hidden;
+
+    text-align: center;
 }
 
 .anime-view h1.anime-title
@@ -70,4 +72,15 @@ body
     text-align: center;
     margin-bottom: 20px;
     font-size: 50px;
+}
+
+.anime-view h1.anime-title.long
+{
+    font-size: 30px;
+    margin-top: 40px;
+}
+
+.anime-view highchart > div
+{
+    margin: 0 auto;
 }

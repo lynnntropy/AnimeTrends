@@ -1,22 +1,4 @@
-Chart.pluginService.register({
-    afterDraw: function(chartInstance) {
-        var ctx = chartInstance.chart.ctx;
-
-        // render the value of the chart above the bar
-        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, 'normal', Chart.defaults.global.defaultFontFamily);
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'bottom';
-
-        chartInstance.data.datasets.forEach(function (dataset) {
-            for (var i = 0; i < dataset.data.length; i++) {
-                var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model;
-                ctx.fillText(dataset.data[i], model.x, model.y - 2);
-            }
-        });
-    }
-});
-
-angular.module('animeStocks', ['ngRoute', 'chart.js', 'ng-fusioncharts'])
+angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier'])
 
     .factory('backendService', function ($http) {
 
@@ -63,79 +45,80 @@ angular.module('animeStocks', ['ngRoute', 'chart.js', 'ng-fusioncharts'])
     .controller('HomeController', function() {})
 
     .controller('AnimeController', function($scope, $rootScope, $route, backendService) {
+        $scope.ratingData = [];
+        $scope.membersData = [];
 
-        $scope.dataSource = {
-            "chart": {
-                "caption": "Column Chart Built in Angular!",
-                "captionFontSize": "30",
-                // more chart properties - explained later
+        $scope.chartConfig = {
+            chart: {
+                type: 'spline',
+                width: $("div[ng-view]").width(),
+                height: $("div[ng-view]").height() - 130,
+                panning: true
             },
-            "data": [{
-                "label": "CornflowerBlue",
-                "value": "42"
-            } //more chart data
-            ]
-        };
-
-        $scope.data = [[], []];
-        $scope.labels = [];
-        $scope.series = ['Average Rating', 'Members'];
-        $scope.datasetOverride = [
-            {
-                yAxisID: 'y-axis-1',
-                lineTension: 0
+            title: {text: ''},
+            xAxis: {
+                type: 'datetime',
+                title: {
+                    text: 'Date/Time (UTC)'
+                }
             },
-            {
-                yAxisID: 'y-axis-2',
-                lineTension: 0
-            }];
-        $scope.colors = ['#2196f3', '#F44336', '#717984', '#F1C40F'];
-        $scope.options = {
-            scales: {
-                yAxes: [
-                    {
-                        id: 'y-axis-1',
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        ticks: {
-                            min: 1,
-                            max: 10
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Average Rating'
-                        }
+            yAxis: [{
+                title: {
+                    text: 'Average Rating'
+                },
+                softMin: 4.5,
+                // tickInterval: 0.5,
+                max: 10,
+                ceiling: 10
+            }, {
+                title: {
+                    text: 'Members (popularity)'
+                },
+                min: 0,
+                opposite: true
+            }],
+            plotOptions: {
+                spline: {
+                    marker: {
+                        enabled: true
                     },
-                    {
-                        id: 'y-axis-2',
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        gridLines: {
-                            display:false
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Members'
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+
+            // navigator: {
+            //     enabled: true
+            // },
+
+            series: [{
+                name: 'Average Rating',
+                yAxis: 0,
+                data: $scope.ratingData,
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%b %e}: {point.y:.2f}'
+                },
+                plotOptions: {
+                    spline: {
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y} mm'
                         }
                     }
-                ]
-            },
-
-            legend: {
-                display: true
-            }
+                }
+            }, {
+                name: 'Members (popularity)',
+                yAxis: 1,
+                data: $scope.membersData,
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%b %e}: {point.y:.0f}'
+                }
+            }]
         };
 
-        backendService.getHistoryForAnime($route.current.params['animeId']).then(function (data) {
-            console.log(data);
-            data.forEach(function(snapshot) {
-                $scope.data[0].push(snapshot.rating);
-                $scope.data[1].push(snapshot.members);
-                $scope.labels.push(snapshot.created_at);
-            });
-        });
 
         if (!$rootScope.selectedAnime)
         {
@@ -144,7 +127,12 @@ angular.module('animeStocks', ['ngRoute', 'chart.js', 'ng-fusioncharts'])
             });
         }
 
-        Chart.defaults.global.colors
+        backendService.getHistoryForAnime($route.current.params['animeId']).then(function (data) {
+            data.forEach(function(snapshot) {
+                $scope.ratingData.push([Date.parse(snapshot.created_at), snapshot.rating]);
+                $scope.membersData.push([Date.parse(snapshot.created_at), snapshot.members]);
+            });
+        });
     })
 
     .config(function($routeProvider, $locationProvider) {
@@ -153,7 +141,7 @@ angular.module('animeStocks', ['ngRoute', 'chart.js', 'ng-fusioncharts'])
                 templateUrl: 'home.html',
                 controller: 'HomeController'
             })
-            .when('/anime/:animeId', {
+            .when('/anime/:animeId/:animeSlug?', {
                 templateUrl: 'anime.html',
                 controller: 'AnimeController'
             });
