@@ -134,6 +134,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier'])
                 min: 0,
                 opposite: true
             }],
+
             plotOptions: {
                 line: {
                     dataLabels: {
@@ -188,7 +189,10 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier'])
                     headerFormat: '<b>{series.name}</b><br>',
                     pointFormat: '{point.x:%b %e}: {point.y:,.0f}'
                 }
-            }]
+            }],
+
+            colors: ['#2196F3', '#FFC107', '#90ed7d', '#f7a35c', '#8085e9',
+                '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1']
         };
 
 
