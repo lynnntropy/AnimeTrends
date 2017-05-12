@@ -30,6 +30,17 @@ body
 {
     margin: 0 40px 10px 40px;
 }
+
+.home .welcome-message .bio
+{
+    font-size: 14px;
+}
+
+.home .welcome-message .bio p
+{
+    margin-bottom: 0;
+}
+
 .sidebar-column
 {
     padding: 0;
