@@ -5,6 +5,11 @@ body
     font-family: 'Open Sans', sans-serif;
 }
 
+.main
+{
+    padding: 0;
+}
+
 .home
 {
     height: 100%;

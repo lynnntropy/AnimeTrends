@@ -1,4 +1,5 @@
-angular.module('Utils', [])
+angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier'])
+
     .filter('thousandSuffix', function () {
         return function (input, decimals) {
             var exp, rounded,
@@ -16,9 +17,7 @@ angular.module('Utils', [])
 
             return (input / Math.pow(1000, exp)).toFixed(decimals) + suffixes[exp - 1];
         };
-    });
-
-angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils'])
+    })
 
     .factory('backendService', function ($http) {
 
@@ -66,14 +65,34 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
 
     .controller('HomeController', function() {})
 
-    .controller('AnimeController', function($scope, $rootScope, $route, backendService) {
+    .controller('AnimeController', function($scope, $rootScope, $route, thousandSuffixFilter, backendService) {
         $scope.ratingData = [];
         $scope.membersData = [];
         $scope.loading = true;
 
         $scope.chartConfig = {
+            rangeSelector: {
+                enabled: true,
+                selected: 4,
+                buttons: [{
+                    type: 'month',
+                    count: 3,
+                    text: '3m'
+                }, {
+                    type: 'month',
+                    count: 1,
+                    text: '1m'
+                }, {
+                    type: 'week',
+                    count: 1,
+                    text: '1w'
+                }, {
+                    type: 'all',
+                    text: 'All'
+                }]
+            },
             chart: {
-                type: 'spline',
+                chartType: 'stock',
                 width: $("div[ng-view]").width(),
                 height: $("div[ng-view]").height() - $("div.anime-header").outerHeight(true),
                 panning: true
@@ -84,17 +103,29 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
                 type: 'datetime',
                 title: {
                     text: 'Date/Time (UTC)'
-                }
+                },
+                units: [[
+                    'day',
+                    [1]
+                ], [
+                    'week',
+                    [1]
+                ], [
+                    'month',
+                    [1, 3, 6]
+                ], [
+                    'year',
+                    null
+                ]],
+                crosshair: true
             },
             yAxis: [{
                 id: 'rating-axis',
                 title: {
                     text: 'Average Rating'
                 },
-                softMin: 4.5,
-                // tickInterval: 0.5,
-                max: 10,
-                ceiling: 10
+                softMin: 5.5,
+                softMax: 10
             }, {
                 id: 'members-axis',
                 title: {
@@ -104,18 +135,36 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
                 opposite: true
             }],
             plotOptions: {
-                spline: {
-                    marker: {
-                        enabled: true
-                    },
+                line: {
                     dataLabels: {
-                        enabled: true
+                        enabled: true,
+                        style: {
+                            "opacity": 0.3
+                        },
+                        formatter: function() {
+                            return thousandSuffixFilter(this.y, 1)
+                        }
                     }
                 }
             },
 
             navigator: {
-                enabled: true
+                enabled: true,
+                xAxis: {
+                    units: [[
+                        'day',
+                        [1]
+                    ], [
+                        'week',
+                        [1]
+                    ], [
+                        'month',
+                        [1, 3, 6]
+                    ], [
+                        'year',
+                        null
+                    ]]
+                }
             },
 
             series: [{
@@ -125,15 +174,10 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
                 data: $scope.ratingData,
                 tooltip: {
                     headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x:%b %e}: {point.y:.2f}'
+                    pointFormat: '{point.x:%b %e}: {point.y:.2f}',
+                    crosshairs: [true]
                 },
                 plotOptions: {
-                    spline: {
-                        dataLabels: {
-                            enabled: true,
-                            format: '{point.y} mm'
-                        }
-                    }
                 }
             }, {
                 id: 'members-series',
@@ -142,7 +186,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
                 data: $scope.membersData,
                 tooltip: {
                     headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x:%b %e}: {point.y:.0f}'
+                    pointFormat: '{point.x:%b %e}: {point.y:,.0f}'
                 }
             }]
         };
