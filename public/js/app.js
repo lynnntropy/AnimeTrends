@@ -163,6 +163,11 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
 
             $scope.loading = false;
         });
+
+        $scope.deselectAnime = function()
+        {
+            $rootScope.selectedAnime = null;
+        }
     })
 
     .config(function($routeProvider, $locationProvider) {

@@ -215,3 +215,10 @@ body
         transform: rotate(360deg);
     }
 }
+
+.home-button
+{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
