@@ -72,7 +72,6 @@ body
     padding-bottom: 5px;
 
     -ms-overflow-style: none;
-    overflow: -moz-scrollbars-none;
 
     flex: 1 1 auto;
 }
