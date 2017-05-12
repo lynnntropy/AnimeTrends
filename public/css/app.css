@@ -132,7 +132,7 @@ body
 .anime-view .anime-header
 {
     padding-top: 50px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 .anime-view h1.anime-title
