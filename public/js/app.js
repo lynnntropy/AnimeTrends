@@ -77,12 +77,14 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
             },
             title: {text: ''},
             xAxis: {
+                id: 'datetime-axis',
                 type: 'datetime',
                 title: {
                     text: 'Date/Time (UTC)'
                 }
             },
             yAxis: [{
+                id: 'rating-axis',
                 title: {
                     text: 'Average Rating'
                 },
@@ -91,6 +93,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
                 max: 10,
                 ceiling: 10
             }, {
+                id: 'members-axis',
                 title: {
                     text: 'Members (popularity)'
                 },
@@ -108,11 +111,12 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
                 }
             },
 
-            // navigator: {
-            //     enabled: true
-            // },
+            navigator: {
+                enabled: true
+            },
 
             series: [{
+                id: 'rating-series',
                 name: 'Average Rating',
                 yAxis: 0,
                 data: $scope.ratingData,
@@ -129,6 +133,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
                     }
                 }
             }, {
+                id: 'members-series',
                 name: 'Members (popularity)',
                 yAxis: 1,
                 data: $scope.membersData,

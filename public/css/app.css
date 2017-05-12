@@ -26,23 +26,57 @@ body
     font-size: 45px;
 }
 
+.home .welcome-message hr
+{
+    margin: 0 40px 10px 40px;
+}
+.sidebar-column
+{
+    padding: 0;
+    background-color: #212121;
+}
+
 .sidebar
 {
-    background-color: #212121;
-
-    padding: 5px 0;
-
-    overflow-y: auto;
     height: 100vh;
+    display: flex;
+    flex-flow: column;
 }
+
+.sidebar .anime-search
+{
+    background: none;
+    border: none;
+    box-shadow: none;
+    margin: 5px 0;
+    color: #ffffff;
+
+    flex: 0 1 auto;
+}
+
+.sidebar .list-container
+{
+    overflow-y: auto;
+    height: 100%;
+    padding-bottom: 5px;
+
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+
+    flex: 1 1 auto;
+}
+
+.sidebar .list-container::-webkit-scrollbar { width: 0 !important }
 
 .sidebar .anime-item
 {
     padding: 5px 10px;
     cursor: pointer;
-    /*transition: background-color 0.1s ease;*/
+}
 
-
+.sidebar .anime-item.selected
+{
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar .anime-item .item-title
@@ -83,8 +117,18 @@ body
 .anime-view h1.anime-title
 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     font-size: 50px;
+}
+
+.anime-view .anime-data
+{
+    margin-bottom: 20px;
+}
+
+.anime-view .anime-data span
+{
+    margin: 5px;
 }
 
 .anime-view h1.anime-title.long

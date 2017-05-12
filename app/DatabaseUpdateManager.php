@@ -40,6 +40,7 @@ class DatabaseUpdateManager
             if ($anime != null)
             {
                 $anime->members = $item->members;
+                $anime->rating = $item->score;
                 $anime->save();
 
                 $snapshot = new Snapshot;
