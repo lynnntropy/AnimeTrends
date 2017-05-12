@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <base href="/">
 
-    <title>Anime Stocks</title>
+    <title ng-bind="'Anime Stocks - ' + title">Anime Stocks</title>
     <link href="{{asset('node_modules/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
 </head>

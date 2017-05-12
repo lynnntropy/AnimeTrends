@@ -196,7 +196,12 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier'])
         {
             backendService.getAnime($route.current.params['animeId']).then(function (data) {
                 $rootScope.selectedAnime = data;
+                $rootScope.title = $rootScope.selectedAnime.title;
             });
+        }
+        else
+        {
+            $rootScope.title = $rootScope.selectedAnime.title;
         }
 
         backendService.getHistoryForAnime($route.current.params['animeId']).then(function (data) {
@@ -217,13 +222,21 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier'])
     .config(function($routeProvider, $locationProvider) {
         $routeProvider
             .when('/', {
+                title: 'Home',
                 templateUrl: 'home.html',
                 controller: 'HomeController'
             })
             .when('/anime/:animeId/:animeSlug?', {
+                title: 'Loading...',
                 templateUrl: 'anime.html',
                 controller: 'AnimeController'
             });
 
         $locationProvider.html5Mode(true);
-    });
+    })
+
+    .run(['$rootScope', function($rootScope) {
+        $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+            $rootScope.title = current.$$route.title;
+        });
+    }]);
