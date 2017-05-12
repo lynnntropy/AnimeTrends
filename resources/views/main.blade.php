@@ -35,6 +35,7 @@
 <script src="{{asset('node_modules/angular-route/angular-route.min.js')}}"></script>
 <script src="{{asset('node_modules/highcharts/highstock.js')}}"></script>
 <script src="{{asset('node_modules/highcharts-ng/dist/highcharts-ng.min.js')}}"></script>
+<script src="{{asset('js/angular-ga.js')}}"></script>
 <script src="{{asset('js/angular-slugify.js')}}"></script>
 <script src="{{asset('js/app.js')}}"></script>
 </body>

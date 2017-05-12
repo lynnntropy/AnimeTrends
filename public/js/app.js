@@ -1,4 +1,4 @@
-angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier'])
+angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular-google-analytics'])
 
     .filter('thousandSuffix', function () {
         return function (input, decimals) {
@@ -222,6 +222,10 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier'])
             $rootScope.selectedAnime = null;
         }
     })
+
+    .config(['AnalyticsProvider', function (AnalyticsProvider) {
+        AnalyticsProvider.setAccount('UA-25952845-5');
+    }]).run(['Analytics', function(Analytics) { }])
 
     .config(function($routeProvider, $locationProvider) {
         $routeProvider
