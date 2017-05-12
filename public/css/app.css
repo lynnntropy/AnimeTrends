@@ -118,12 +118,17 @@ body
 
 .anime-view
 {
-    padding-top: 50px;
     height: 100vh;
     overflow: hidden;
 
     text-align: center;
     position: relative;
+}
+
+.anime-view .anime-header
+{
+    padding-top: 50px;
+    margin-bottom: 20px;
 }
 
 .anime-view h1.anime-title
@@ -135,7 +140,7 @@ body
 
 .anime-view .anime-data
 {
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 .anime-view .anime-data span

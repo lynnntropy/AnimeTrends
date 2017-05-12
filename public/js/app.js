@@ -75,7 +75,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
             chart: {
                 type: 'spline',
                 width: $("div[ng-view]").width(),
-                height: $("div[ng-view]").height() - 130,
+                height: $("div[ng-view]").height() - $("div.anime-header").outerHeight(true),
                 panning: true
             },
             title: {text: ''},
