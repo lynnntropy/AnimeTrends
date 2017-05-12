@@ -11,7 +11,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-2 sidebar-column" ng-controller="SidebarController">
-            <div class="sidebar">
+            <div class="sidebar" ng-cloak>
                 <input type="text" class="form-control anime-search" placeholder="Search..." ng-model="searchString">
                 <div class="list-container">
                     <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in anime | filter:searchString" ng-click="selectAnime(item)">

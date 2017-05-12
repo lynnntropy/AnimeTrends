@@ -51,9 +51,11 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
     })
 
     .controller('SidebarController', function($scope, $rootScope, backendService) {
+        $rootScope.loading = true;
+
         backendService.getAnimeList().then(function (data) {
-            console.log(data);
             $scope.anime = data;
+            $rootScope.loading = false;
         });
 
         $scope.selectAnime = function(anime)
@@ -67,6 +69,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
     .controller('AnimeController', function($scope, $rootScope, $route, backendService) {
         $scope.ratingData = [];
         $scope.membersData = [];
+        $scope.loading = true;
 
         $scope.chartConfig = {
             chart: {
@@ -157,6 +160,8 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'Utils']
                 $scope.ratingData.push([Date.parse(snapshot.created_at), snapshot.rating]);
                 $scope.membersData.push([Date.parse(snapshot.created_at), snapshot.members]);
             });
+
+            $scope.loading = false;
         });
     })
 
