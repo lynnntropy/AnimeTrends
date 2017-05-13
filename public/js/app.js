@@ -226,7 +226,8 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
                     value: i,
                     label: {
                         text: 'New episode',
-                        y: 50
+                        verticalAlign: 'bottom',
+                        y: -100
                     }});
             }
 
