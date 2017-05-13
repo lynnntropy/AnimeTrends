@@ -22,6 +22,8 @@ class DatabaseUpdateManager
                 $newAnime->title = $item->title;
                 $newAnime->image = $item->imageUrl;
                 $newAnime->members = $item->members;
+                $newAnime->rating = $item->score;
+                $newAnime->start = $item->startTimestamp;
                 $newAnime->save();
             }
         }

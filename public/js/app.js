@@ -68,6 +68,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
     .controller('AnimeController', function($scope, $rootScope, $route, thousandSuffixFilter, backendService) {
         $scope.ratingData = [];
         $scope.membersData = [];
+        $scope.episodePlotLines = [];
         $scope.loading = true;
 
         $scope.chartConfig = {
@@ -117,6 +118,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
                     'year',
                     null
                 ]],
+                plotLines: $scope.episodePlotLines,
                 crosshair: true
             },
             yAxis: [{
@@ -192,9 +194,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
             }],
 
             colors: ['#2196F3', '#FFC107', '#90ed7d', '#f7a35c', '#8085e9',
-                '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1'],
-
-
+                '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1']
         };
 
 
@@ -215,6 +215,21 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
                 $scope.ratingData.push([Date.parse(snapshot.created_at), snapshot.rating]);
                 $scope.membersData.push([Date.parse(snapshot.created_at), snapshot.members]);
             });
+
+            var weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+            for(var i = $rootScope.selectedAnime.start * 1000; i < Date.now() + weekInMilliseconds * 3; i += weekInMilliseconds)
+            {
+                console.log("Adding plot line at: " + i);
+                $scope.episodePlotLines.push({
+                    color: '#CCCCCC',
+                    width: 2,
+                    value: i,
+                    label: {
+                        text: 'New episode',
+                        y: 50
+                    }});
+            }
+
 
             $scope.loading = false;
         });

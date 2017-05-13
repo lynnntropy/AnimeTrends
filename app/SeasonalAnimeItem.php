@@ -17,6 +17,7 @@ class SeasonalAnimeItem
     public $members;
     public $type;
     public $imageUrl;
+    public $startTimestamp;
 
     /**
      * SeasonalAnimeItem constructor.
@@ -26,8 +27,9 @@ class SeasonalAnimeItem
      * @param $members
      * @param $type
      * @param $imageUrl
+     * @param $startTimestamp
      */
-    public function __construct($id, $title, $score, $members, $type, $imageUrl)
+    public function __construct($id, $title, $score, $members, $type, $imageUrl, $startTimestamp)
     {
         $this->id = $id;
         $this->title = $title;
@@ -35,5 +37,8 @@ class SeasonalAnimeItem
         $this->members = $members;
         $this->type = $type;
         $this->imageUrl = $imageUrl;
+        $this->startTimestamp = $startTimestamp;
     }
+
+
 }

@@ -31,7 +31,11 @@ class SeasonalAnimeService
             $type = $matches[1];
             $imageElement = $node->filter("div.image > img")->first();
             $imageUrl = $imageElement->attr('data-src') ? $imageElement->attr('data-src') : $imageElement->attr('src');
-            $results[] = new SeasonalAnimeItem($id, $title, $score, $members, $type, $imageUrl);
+
+            $dateString = $node->filter("span.remain-time")->first()->text();
+            $startTimestamp = strtotime($dateString);
+
+            $results[] = new SeasonalAnimeItem($id, $title, $score, $members, $type, $imageUrl, $startTimestamp);
         });
 
         return $results;
