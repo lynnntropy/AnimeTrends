@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
 
 body
 {
@@ -125,21 +125,59 @@ body
     height: 100vh;
     overflow: hidden;
 
-    text-align: center;
+
     position: relative;
 }
 
 .anime-view .anime-header
 {
-    padding-top: 50px;
+    padding-top: 30px;
+    padding-left: 75px;
     margin-bottom: 0;
+}
+
+.anime-view .anime-header .anime-card
+{
+    text-align: left;
+    display: flex;
+    padding-bottom: 5px;
+}
+
+.anime-view .anime-header .anime-card .anime-image
+{
+    /*float: left;*/
+    margin-right: 20px;
+    height: 120px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.45);
+}
+
+.anime-view .anime-header .anime-card .anime-text
+{
+    padding-top: 5px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.anime-view .anime-header .anime-card .anime-text b
+{
+    font-weight: 600;
+}
+
+.anime-view .anime-header .anime-card .anime-text a
+{
+    display: inline;
 }
 
 .anime-view h1.anime-title
 {
-    text-align: center;
-    margin-bottom: 5px;
-    font-size: 50px;
+    /*text-align: center;*/
+    margin: 0 0 0 0;
+    font-size: 35px;
+    /*position: relative;*/
+    /*right: 3px;*/
+    /*float: left;*/
 }
 
 .anime-view .anime-data
@@ -149,13 +187,13 @@ body
 
 .anime-view .anime-data span
 {
-    margin: 5px;
+    margin-right: 10px;
 }
 
 .anime-view h1.anime-title.long
 {
-    font-size: 30px;
-    margin-top: 40px;
+    font-size: 25px;
+    /*margin-top: 5px;*/
 }
 
 .anime-view highchart > div
