@@ -175,7 +175,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
                 data: $scope.ratingData,
                 tooltip: {
                     headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x:%b %e}: {point.y:.2f}',
+                    pointFormat: '{point.x:%H:%M (UTC) on %b %e}: <b>{point.y:.2f}</b>',
                     crosshairs: [true]
                 },
                 plotOptions: {
@@ -187,12 +187,14 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
                 data: $scope.membersData,
                 tooltip: {
                     headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x:%b %e}: {point.y:,.0f}'
+                    pointFormat: '{point.x:%H:%M (UTC) on %b %e}: <b>{point.y:,.0f}</b>'
                 }
             }],
 
             colors: ['#2196F3', '#FFC107', '#90ed7d', '#f7a35c', '#8085e9',
-                '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1']
+                '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1'],
+
+
         };
 
 
