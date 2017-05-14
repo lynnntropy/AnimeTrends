@@ -226,13 +226,18 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
             {
                 console.log("Adding plot line at: " + i);
                 $scope.episodePlotLines.push({
-                    color: '#CCCCCC',
-                    width: 2,
+                    color: '#8BC34A',
+                    dashStyle: 'Dash',
+                    width: 1,
                     value: i,
                     label: {
-                        text: 'New episode',
+                        text: 'New<br>episode<br>(Japan)',
+                        rotation: 0,
                         verticalAlign: 'bottom',
-                        y: -100
+                        y: -50,
+                        style: {
+                            'opacity': 0.7
+                        }
                     }});
             }
 
