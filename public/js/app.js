@@ -1,3 +1,8 @@
+function mysqlToIsoDateTime(dateTimeString)
+{
+    return dateTimeString.replace(' ', 'T') + "+00:00";
+}
+
 angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular-google-analytics'])
 
     .filter('thousandSuffix', function () {
@@ -212,8 +217,8 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
 
         backendService.getHistoryForAnime($route.current.params['animeId']).then(function (data) {
             data.forEach(function(snapshot) {
-                $scope.ratingData.push([Date.parse(snapshot.created_at), snapshot.rating]);
-                $scope.membersData.push([Date.parse(snapshot.created_at), snapshot.members]);
+                $scope.ratingData.push([Date.parse(mysqlToIsoDateTime(snapshot.created_at)), snapshot.rating]);
+                $scope.membersData.push([Date.parse(mysqlToIsoDateTime(snapshot.created_at)), snapshot.members]);
             });
 
             var weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
