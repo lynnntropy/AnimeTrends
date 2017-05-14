@@ -174,7 +174,10 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
                     ], [
                         'year',
                         null
-                    ]]
+                    ]],
+                    labels: {
+                        format: '{value:%b %e}'
+                    }
                 }
             },
 
