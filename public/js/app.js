@@ -124,7 +124,10 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
                     null
                 ]],
                 plotLines: $scope.episodePlotLines,
-                crosshair: true
+                crosshair: true,
+                labels: {
+                    format: '{value:%b %e}'
+                }
             },
             yAxis: [{
                 id: 'rating-axis',
