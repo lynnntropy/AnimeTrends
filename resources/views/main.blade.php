@@ -4,6 +4,7 @@
     @if(isset($anime))
         <meta property="og:title" content="Anime Stocks - {{$anime->title}}" />
         <meta property="og:description" content="Rating and popularity history for {{$anime->title}} on MyAnimeList." />
+        <meta property="og:image" content="{{$anime->image}}" />
     @else
         <meta property="og:title" content="Anime Stocks" />
         <meta property="og:description" content="A site that tracks rating and popularity history for anime on MyAnimeList." />
