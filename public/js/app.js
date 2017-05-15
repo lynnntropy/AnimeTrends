@@ -64,6 +64,7 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
 
     .controller('SidebarController', function($scope, $rootScope, backendService) {
         $rootScope.loading = true;
+        $scope.archiveView = false;
 
         backendService.getAnimeList().then(function (data) {
             $scope.anime = data;

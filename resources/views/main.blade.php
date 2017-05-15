@@ -26,6 +26,10 @@
         <div class="col-xs-2 sidebar-column" ng-controller="SidebarController">
             <div class="sidebar" ng-cloak>
                 <input type="text" class="form-control anime-search" placeholder="Search..." ng-model="searchString">
+                <div class="list-tabs">
+                    <div class="tab" ng-class="{'active': !archiveView}" ng-click="archiveView = false">Current</div>
+                    <div class="tab" ng-class="{'active': archiveView}" ng-click="archiveView = true">Archive</div>
+                </div>
                 <div class="list-container">
                     <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in anime | filter:searchString" ng-click="selectAnime(item)">
                         <div class="anime-item" ng-class="{'selected': (selectedAnime.id == item.id)}">
