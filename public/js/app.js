@@ -47,10 +47,18 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
             });
         };
 
+        var getUpdateTime = function()
+        {
+            return $http.get('/api/updated').then(function (res) {
+                return res.data;
+            });
+        };
+
         return {
             getAnimeList: getAnimeList,
             getHistoryForAnime: getHistoryForAnime,
-            getAnime: getAnime
+            getAnime: getAnime,
+            getUpdateTime: getUpdateTime
         }
     })
 
@@ -68,7 +76,12 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
         }
     })
 
-    .controller('HomeController', function() {})
+    .controller('HomeController', function($scope, backendService) {
+        backendService.getUpdateTime().then(function (time) {
+            console.log(time);
+            $scope.updated = time;
+        })
+    })
 
     .controller('AnimeController', function($scope, $rootScope, $route, thousandSuffixFilter, backendService) {
         $scope.ratingData = [];

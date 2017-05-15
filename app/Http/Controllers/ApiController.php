@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Anime;
+use App\Snapshot;
 use Illuminate\Routing\Controller;
 
 class ApiController extends Controller
@@ -20,5 +21,11 @@ class ApiController extends Controller
     public function getSnapshotsForAnime(Anime $anime)
     {
         return $anime->snapshots;
+    }
+
+    public function getLatestUpdateTime()
+    {
+        $time = Snapshot::orderBy('id', 'desc')->first()->created_at;
+        return ["timestamp" => $time->timestamp, "diff" => $time->diffForHumans()];
     }
 }
