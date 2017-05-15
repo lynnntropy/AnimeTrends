@@ -1,6 +1,9 @@
 <html ng-app="animeStocks">
 <head>
     <meta charset="UTF-8">
+    <meta property="og:title" content="Test Title" />
+    <meta property="og:description"
+          content="Test Description" />
     <base href="/">
 
     <title ng-bind="'Anime Stocks - ' + title">Anime Stocks</title>
