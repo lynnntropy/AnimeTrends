@@ -78,7 +78,6 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
 
     .controller('HomeController', function($scope, backendService) {
         backendService.getUpdateTime().then(function (time) {
-            console.log(time);
             $scope.updated = time;
         })
     })
@@ -221,52 +220,63 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
                 '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1']
         };
 
+        $scope.deselectAnime = function()
+        {
+            $rootScope.selectedAnime = null;
+        };
+
+        $scope.loadHistory = function() {
+            if ($scope.loading === false) $scope.loading = true;
+            console.log('Loading history...');
+            backendService.getHistoryForAnime($route.current.params['animeId']).then(function (data) {
+                console.log('Fetched ' + data.length + ' snapshots from API. Parsing...');
+
+                data.forEach(function(snapshot) {
+                    $scope.ratingData.push([Date.parse(mysqlToIsoDateTime(snapshot.created_at)), snapshot.rating]);
+                    $scope.membersData.push([Date.parse(mysqlToIsoDateTime(snapshot.created_at)), snapshot.members]);
+                });
+
+                console.log('Parsing complete. Drawing plotlines...');
+
+                var weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+                for(var i = $rootScope.selectedAnime.start * 1000; i < Date.now() + weekInMilliseconds * 3; i += weekInMilliseconds)
+                {
+                    $scope.episodePlotLines.push({
+                        color: '#8BC34A',
+                        dashStyle: 'Dash',
+                        width: 1,
+                        value: i,
+                        label: {
+                            text: 'New<br>episode<br>(Japan)',
+                            rotation: 0,
+                            verticalAlign: 'bottom',
+                            y: -50,
+                            style: {
+                                'opacity': 0.7
+                            }
+                        }});
+                }
+
+                console.log('Loading chart data complete.');
+                $scope.loading = false;
+            });
+        };
 
         if (!$rootScope.selectedAnime)
         {
+            console.log('Fetching anime ID ' + $route.current.params['animeId'] + ' from API...');
             backendService.getAnime($route.current.params['animeId']).then(function (data) {
                 $rootScope.selectedAnime = data;
+                console.log('Loaded anime from API: ' + $rootScope.selectedAnime.title);
                 $rootScope.title = $rootScope.selectedAnime.title;
+                $scope.loadHistory();
             });
         }
         else
         {
+            console.log('Loaded anime from memory: ' + $rootScope.selectedAnime.title);
             $rootScope.title = $rootScope.selectedAnime.title;
-        }
-
-        backendService.getHistoryForAnime($route.current.params['animeId']).then(function (data) {
-            data.forEach(function(snapshot) {
-                $scope.ratingData.push([Date.parse(mysqlToIsoDateTime(snapshot.created_at)), snapshot.rating]);
-                $scope.membersData.push([Date.parse(mysqlToIsoDateTime(snapshot.created_at)), snapshot.members]);
-            });
-
-            var weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
-            for(var i = $rootScope.selectedAnime.start * 1000; i < Date.now() + weekInMilliseconds * 3; i += weekInMilliseconds)
-            {
-                console.log("Adding plot line at: " + i);
-                $scope.episodePlotLines.push({
-                    color: '#8BC34A',
-                    dashStyle: 'Dash',
-                    width: 1,
-                    value: i,
-                    label: {
-                        text: 'New<br>episode<br>(Japan)',
-                        rotation: 0,
-                        verticalAlign: 'bottom',
-                        y: -50,
-                        style: {
-                            'opacity': 0.7
-                        }
-                    }});
-            }
-
-
-            $scope.loading = false;
-        });
-
-        $scope.deselectAnime = function()
-        {
-            $rootScope.selectedAnime = null;
+            $scope.loadHistory();
         }
     })
 
