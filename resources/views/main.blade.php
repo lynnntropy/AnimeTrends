@@ -1,9 +1,13 @@
 <html ng-app="animeStocks">
 <head>
     <meta charset="UTF-8">
-    <meta property="og:title" content="Test Title" />
-    <meta property="og:description"
-          content="Test Description" />
+    @if(isset($anime))
+        <meta property="og:title" content="Anime Stocks - {{$anime->title}}" />
+        <meta property="og:description" content="Rating and popularity history for {{$anime->title}} on MyAnimeList." />
+    @else
+        <meta property="og:title" content="Anime Stocks" />
+        <meta property="og:description" content="A site that tracks rating and popularity history for anime on MyAnimeList." />
+    @endif
     <base href="/">
 
     <title ng-bind="'Anime Stocks - ' + title">Anime Stocks</title>
