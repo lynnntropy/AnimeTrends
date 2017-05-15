@@ -8,6 +8,7 @@
         <meta property="og:title" content="Anime Stocks" />
         <meta property="og:description" content="A site that tracks rating and popularity history for anime on MyAnimeList." />
     @endif
+    <meta property="og:site_name" content="Anime Stocks" />
     <base href="/">
 
     <title ng-bind="'Anime Stocks - ' + title">Anime Stocks</title>
