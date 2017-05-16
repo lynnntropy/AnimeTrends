@@ -66,8 +66,14 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
         $rootScope.loading = true;
         $scope.archiveView = false;
 
+        $scope.current = [];
+        $scope.archived = [];
+
         backendService.getAnimeList().then(function (data) {
-            $scope.anime = data;
+            data.forEach(function(animeItem) {
+                if (animeItem.archived) $scope.archived.push(animeItem);
+                else $scope.current.push(animeItem);
+            });
             $rootScope.loading = false;
         });
 

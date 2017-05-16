@@ -30,8 +30,16 @@
                     <div class="tab" ng-class="{'active': !archiveView}" ng-click="archiveView = false">Current</div>
                     <div class="tab" ng-class="{'active': archiveView}" ng-click="archiveView = true">Archive</div>
                 </div>
-                <div class="list-container">
-                    <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in anime | filter:checkArchived() | filter:searchString" ng-click="selectAnime(item)">
+                <div class="list-container" ng-show="!archiveView">
+                    <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in current | filter:searchString" ng-click="selectAnime(item)">
+                        <div class="anime-item" ng-class="{'selected': (selectedAnime.id == item.id)}">
+                            <p class="item-title">@{{item.title}}</p>
+                            <p class="item-members">Members: @{{item.members | thousandSuffix:1}}</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="list-container" ng-show="archiveView">
+                    <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in archived | filter:searchString" ng-click="selectAnime(item)">
                         <div class="anime-item" ng-class="{'selected': (selectedAnime.id == item.id)}">
                             <p class="item-title">@{{item.title}}</p>
                             <p class="item-members">Members: @{{item.members | thousandSuffix:1}}</p>
