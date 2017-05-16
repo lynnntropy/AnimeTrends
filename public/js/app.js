@@ -98,9 +98,9 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
     })
 
     .controller('AnimeController', function($scope, $rootScope, $route, thousandSuffixFilter, backendService) {
-        $scope.ratingData = [];
-        $scope.membersData = [];
-        $scope.episodePlotLines = [];
+        var ratingData = [];
+        var membersData = [];
+        var episodePlotLines = [];
         $scope.loading = true;
 
         $scope.deselectAnime = function()
@@ -108,15 +108,15 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
             $rootScope.selectedAnime = null;
         };
 
-        $scope.loadHistory = function() {
+        $scope.loadHistory = function()
+        {
             if ($scope.loading === false) $scope.loading = true;
             console.log('Loading history...');
             backendService.getHistoryForAnime($route.current.params['animeId']).then(function (data) {
                 console.log('Fetched ' + data.length + ' snapshots from API. Parsing...');
-
                 data.forEach(function(snapshot) {
-                    $scope.ratingData.push([Date.parse(mysqlToIsoDateTime(snapshot.created_at)), snapshot.rating]);
-                    $scope.membersData.push([Date.parse(mysqlToIsoDateTime(snapshot.created_at)), snapshot.members]);
+                    ratingData.push([Date.parse(mysqlToIsoDateTime(snapshot.created_at)), snapshot.rating]);
+                    membersData.push([Date.parse(mysqlToIsoDateTime(snapshot.created_at)), snapshot.members]);
                 });
 
                 console.log('Parsing complete. Drawing plotlines...');
@@ -124,7 +124,7 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                 var weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
                 for(var i = $rootScope.selectedAnime.start * 1000; i < Date.now() + weekInMilliseconds * 3; i += weekInMilliseconds)
                 {
-                    $scope.episodePlotLines.push({
+                    episodePlotLines.push({
                         color: '#8BC34A',
                         dashStyle: 'Dash',
                         width: 1,
@@ -163,8 +163,6 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                         }]
                     },
                     chart: {
-                        // width: $("div[ng-view]").width(),
-                        // height: $("div[ng-view]").height() - $("div.anime-header").outerHeight(true),
                         panning: true,
                         type: 'line'
                     },
@@ -189,7 +187,7 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                             'year',
                             null
                         ]],
-                        plotLines: $scope.episodePlotLines,
+                        plotLines: episodePlotLines,
                         crosshair: true,
                         labels: {
                             format: '{value:%b %e}'
@@ -251,7 +249,7 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                         id: 'rating-series',
                         name: 'Average Rating',
                         yAxis: 0,
-                        data: $scope.ratingData,
+                        data: ratingData,
                         tooltip: {
                             headerFormat: '{point.x:%b %e, %H:%M (UTC)}<br>',
                             pointFormat: 'Average rating: <b>{point.y:.2f}</b><br>',
@@ -264,9 +262,8 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                         id: 'members-series',
                         name: 'Members (popularity)',
                         yAxis: 1,
-                        data: $scope.membersData,
+                        data: membersData,
                         tooltip: {
-                            // headerFormat: '<b>{series.name}</b><br>',
                             pointFormat: 'Members: <b>{point.y:,.0f}</b>',
                             padding: 50
                         }

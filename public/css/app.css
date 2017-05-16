@@ -131,6 +131,7 @@ body
 {
     padding: 5px 10px;
     cursor: pointer;
+    transition: background-color 0.1s ease;
 }
 
 .sidebar .anime-item.selected
@@ -155,7 +156,7 @@ body
 
 .sidebar .anime-item:hover
 {
-    background-color: #2196F3;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .sidebar a
