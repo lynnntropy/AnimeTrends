@@ -9,8 +9,10 @@
         "barryvdh/laravel-ide-helper": "^2.3",
         "doctrine/dbal": "^2.5",
         "fabpot/goutte": "^3.2",
+        "ifsnop/mysqldump-php": "2.*",
         "laravel/framework": "5.4.*",
-        "laravel/tinker": "~1.0"
+        "laravel/tinker": "~1.0",
+        "maatwebsite/excel": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

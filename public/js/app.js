@@ -97,6 +97,8 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
         })
     })
 
+    .controller('ExportController', function() { })
+
     .controller('AnimeController', function($scope, $rootScope, $route, thousandSuffixFilter, backendService) {
         var ratingData = [];
         var membersData = [];
@@ -307,6 +309,13 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                 templateUrl: 'home.html',
                 controller: 'HomeController'
             })
+
+            .when('/export', {
+                title: 'Database Export',
+                templateUrl: 'export.html',
+                controller: 'ExportController'
+            })
+
             .when('/anime/:animeId/:animeSlug?', {
                 title: 'Loading...',
                 templateUrl: 'anime.html',

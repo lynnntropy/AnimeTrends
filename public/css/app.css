@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500');
 
 body
 {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .main
@@ -24,11 +25,13 @@ body
     text-align: center;
     width: 500px;
     font-size: 17px;
+    font-weight: 300;
 }
 
 .home .welcome-message h1
 {
     font-size: 45px;
+    font-weight: 100;
 }
 
 .home .welcome-message hr
@@ -47,6 +50,12 @@ body
     margin-bottom: 0;
 }
 
+.home .welcome-message .export
+{
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
 .home .welcome-message .updated
 {
     font-size: 14px;
@@ -54,7 +63,50 @@ body
 
 .home .welcome-message .updated .diff
 {
-    font-weight: 600;
+    font-weight: 500;
+}
+
+.export-page
+{
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.export-page .export-container
+{
+    text-align: center;
+    width: 500px;
+    font-size: 17px;
+    font-weight: 300;
+}
+
+.export-page .export-container h1
+{
+    font-size: 45px;
+    font-weight: 100;
+}
+
+.export-page .export-container .description
+{
+    margin-bottom: 35px;
+}
+
+.export-page .export-container .export-buttons .btn
+{
+    min-width: 150px;
+}
+
+.export-page .export-container .export-buttons p
+{
+    margin: 0;
+}
+
+.export-page .export-container .export-buttons hr
+{
+    margin: 10px 120px;
 }
 
 .sidebar-column
@@ -208,7 +260,7 @@ body
 
 .anime-view .anime-header .anime-card .anime-text b
 {
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .anime-view .anime-header .anime-card .anime-text a
@@ -224,6 +276,7 @@ body
     /*position: relative;*/
     /*right: 3px;*/
     /*float: left;*/
+    font-weight: 300;
 }
 
 .anime-view .anime-data

@@ -17,3 +17,9 @@ Route::get('/anime', 'ApiController@getAnimeList');
 Route::get('/anime/{anime}', 'ApiController@getAnime');
 Route::get('/anime/{anime}/history', 'ApiController@getSnapshotsForAnime');
 Route::get('/updated', 'ApiController@getLatestUpdateTime');
+
+Route::get('/export/anime/csv', 'ExportController@getAnimeCsv');
+Route::get('/export/anime/json', 'ExportController@getAnimeJson');
+Route::get('/export/snapshots/csv', 'ExportController@getSnapshotsCsv');
+Route::get('/export/snapshots/json', 'ExportController@getSnapshotsJson');
+Route::get('/export/sql', 'ExportController@databaseDump');
