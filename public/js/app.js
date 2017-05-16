@@ -74,7 +74,15 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
         $scope.selectAnime = function(anime)
         {
             $rootScope.selectedAnime = anime;
-        }
+        };
+
+        $scope.checkArchived = function()
+        {
+            return function(item) {
+                if (item.archived === 0 && !$scope.archiveView) return true;
+                else return item.archived === 1 && $scope.archiveView;
+            }
+        };
     })
 
     .controller('HomeController', function($scope, backendService) {

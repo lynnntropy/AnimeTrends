@@ -45,5 +45,24 @@ class DatabaseUpdateManager
                 $anime->snapshots()->save($snapshot);
             }
         }
+
+        // Generate a list of IDs currently on the page,
+        // so we can check if any anime needs to be archived.
+
+        $currentIds = [];
+        foreach ($seasonalAnime as $item) $currentIds[] = $item->id;
+
+        // Loop through (non-archived!) anime,
+        // and archive any that are now not on the page.
+
+        $animeList = Anime::where('archived', false)->get();
+        foreach($animeList as $item)
+        {
+            if (!in_array($item->id, $currentIds))
+            {
+                $item->archived = true;
+                $item->save();
+            }
+        }
     }
 }
