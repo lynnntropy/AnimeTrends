@@ -4,6 +4,8 @@ namespace App;
 
 
 use App\Services\SeasonalAnimeService;
+use Maatwebsite\Excel\Facades\Excel;
+use Ifsnop\Mysqldump as IMysqldump;
 
 class DatabaseUpdateManager
 {
@@ -64,5 +66,43 @@ class DatabaseUpdateManager
                 $item->save();
             }
         }
+
+        // Generate updated database dumps in a number of formats.
+
+        self::generateCsvDumps();
+        self::generateJsonDumps();
+        self::generateDatabaseDump();
+    }
+
+    public static function generateCsvDumps()
+    {
+        Excel::create('anime', function($excel) {
+            $excel->sheet('sheet', function($sheet) {
+                $sheet->fromModel(Anime::all());
+            });
+        })->store('csv', storage_path('app/public/dumps'));
+
+        Excel::create('snapshots', function($excel) {
+            $excel->sheet('sheet', function($sheet) {
+                $sheet->fromModel(Snapshot::all());
+            });
+        })->store('csv', storage_path('app/public/dumps'));
+    }
+
+    public static function generateJsonDumps()
+    {
+        $fp = fopen(storage_path('app/public/dumps/anime.json'), 'w');
+        fwrite($fp, (string) Anime::all());
+        fclose($fp);
+
+        $fp = fopen(storage_path('app/public/dumps/snapshots.json'), 'w');
+        fwrite($fp, (string) Snapshot::all());
+        fclose($fp);
+    }
+
+    public static function generateDatabaseDump()
+    {
+        $dump = new IMysqldump\Mysqldump('mysql:host=localhost;dbname=animestocks', env('DB_USERNAME'), env('DB_PASSWORD'));
+        $dump->start(storage_path('app/public/dumps/animestocks.sql'));
     }
 }
