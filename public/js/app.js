@@ -3,7 +3,7 @@ function mysqlToIsoDateTime(dateTimeString)
     return dateTimeString.replace(' ', 'T') + "+00:00";
 }
 
-angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular-google-analytics'])
+angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics'])
 
     .filter('thousandSuffix', function () {
         return function (input, decimals) {
@@ -103,138 +103,6 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
         $scope.episodePlotLines = [];
         $scope.loading = true;
 
-        $scope.chartConfig = {
-            rangeSelector: {
-                enabled: true,
-                selected: 4,
-                buttons: [{
-                    type: 'month',
-                    count: 3,
-                    text: '3m'
-                }, {
-                    type: 'month',
-                    count: 1,
-                    text: '1m'
-                }, {
-                    type: 'week',
-                    count: 1,
-                    text: '1w'
-                }, {
-                    type: 'all',
-                    text: 'All'
-                }]
-            },
-            chart: {
-                chartType: 'stock',
-                width: $("div[ng-view]").width(),
-                height: $("div[ng-view]").height() - $("div.anime-header").outerHeight(true),
-                panning: true
-            },
-            title: {text: ''},
-            xAxis: {
-                id: 'datetime-axis',
-                type: 'datetime',
-                title: {
-                    text: 'Date/Time (UTC)'
-                },
-                units: [[
-                    'day',
-                    [1]
-                ], [
-                    'week',
-                    [1]
-                ], [
-                    'month',
-                    [1, 3, 6]
-                ], [
-                    'year',
-                    null
-                ]],
-                plotLines: $scope.episodePlotLines,
-                crosshair: true,
-                labels: {
-                    format: '{value:%b %e}'
-                }
-            },
-            yAxis: [{
-                id: 'rating-axis',
-                title: {
-                    text: 'Average Rating'
-                },
-                softMin: 5.5,
-                softMax: 10
-            }, {
-                id: 'members-axis',
-                title: {
-                    text: 'Members (popularity)'
-                },
-                min: 0,
-                opposite: true
-            }],
-
-            plotOptions: {
-                line: {
-                    dataLabels: {
-                        enabled: true,
-                        style: {
-                            "opacity": 0.3
-                        },
-                        formatter: function() {
-                            return thousandSuffixFilter(this.y, 1)
-                        }
-                    }
-                }
-            },
-
-            navigator: {
-                enabled: true,
-                xAxis: {
-                    units: [[
-                        'day',
-                        [1]
-                    ], [
-                        'week',
-                        [1]
-                    ], [
-                        'month',
-                        [1, 3, 6]
-                    ], [
-                        'year',
-                        null
-                    ]],
-                    labels: {
-                        format: '{value:%b %e}'
-                    }
-                }
-            },
-
-            series: [{
-                id: 'rating-series',
-                name: 'Average Rating',
-                yAxis: 0,
-                data: $scope.ratingData,
-                tooltip: {
-                    headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x:%H:%M (UTC) on %b %e}: <b>{point.y:.2f}</b>',
-                    crosshairs: [true]
-                },
-                plotOptions: {
-                }
-            }, {
-                id: 'members-series',
-                name: 'Members (popularity)',
-                yAxis: 1,
-                data: $scope.membersData,
-                tooltip: {
-                    headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x:%H:%M (UTC) on %b %e}: <b>{point.y:,.0f}</b>'
-                }
-            }],
-
-            colors: ['#2196F3', '#FFC107', '#90ed7d', '#f7a35c', '#8085e9',
-                '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1']
-        };
-
         $scope.deselectAnime = function()
         {
             $rootScope.selectedAnime = null;
@@ -272,7 +140,143 @@ angular.module('animeStocks', ['ngRoute', 'highcharts-ng', 'slugifier', 'angular
                         }});
                 }
 
-                console.log('Loading chart data complete.');
+                console.log('Loading chart data complete. Creating chart...');
+                Highcharts.stockChart('chart-container', {
+                    rangeSelector: {
+                        enabled: true,
+                        selected: 4,
+                        buttons: [{
+                            type: 'month',
+                            count: 3,
+                            text: '3m'
+                        }, {
+                            type: 'month',
+                            count: 1,
+                            text: '1m'
+                        }, {
+                            type: 'week',
+                            count: 1,
+                            text: '1w'
+                        }, {
+                            type: 'all',
+                            text: 'All'
+                        }]
+                    },
+                    chart: {
+                        // width: $("div[ng-view]").width(),
+                        // height: $("div[ng-view]").height() - $("div.anime-header").outerHeight(true),
+                        panning: true,
+                        type: 'line'
+                    },
+                    title: {text: ''},
+                    xAxis: {
+                        id: 'datetime-axis',
+                        type: 'datetime',
+                        ordinal: false,
+                        title: {
+                            text: 'Date/Time (UTC)'
+                        },
+                        units: [[
+                            'day',
+                            [1]
+                        ], [
+                            'week',
+                            [1]
+                        ], [
+                            'month',
+                            [1, 3, 6]
+                        ], [
+                            'year',
+                            null
+                        ]],
+                        plotLines: $scope.episodePlotLines,
+                        crosshair: true,
+                        labels: {
+                            format: '{value:%b %e}'
+                        }
+                    },
+                    yAxis: [{
+                        id: 'rating-axis',
+                        title: {
+                            text: 'Average Rating'
+                        },
+                        softMin: 5.5,
+                        softMax: 10,
+                        opposite: false
+                    }, {
+                        id: 'members-axis',
+                        title: {
+                            text: 'Members (popularity)'
+                        },
+                        min: 0
+                    }],
+
+                    plotOptions: {
+                        line: {
+                            dataLabels: {
+                                enabled: true,
+                                style: {
+                                    "opacity": 0.3
+                                },
+                                formatter: function() {
+                                    return thousandSuffixFilter(this.y, 1)
+                                }
+                            }
+                        }
+                    },
+
+                    navigator: {
+                        enabled: true,
+                        xAxis: {
+                            units: [[
+                                'day',
+                                [1]
+                            ], [
+                                'week',
+                                [1]
+                            ], [
+                                'month',
+                                [1, 3, 6]
+                            ], [
+                                'year',
+                                null
+                            ]],
+                            labels: {
+                                format: '{value:%b %e}'
+                            }
+                        }
+                    },
+
+                    series: [{
+                        id: 'rating-series',
+                        name: 'Average Rating',
+                        yAxis: 0,
+                        data: $scope.ratingData,
+                        tooltip: {
+                            headerFormat: '{point.x:%b %e, %H:%M (UTC)}<br>',
+                            pointFormat: 'Average rating: <b>{point.y:.2f}</b><br>',
+                            crosshairs: [true],
+                            padding: 50
+                        },
+                        plotOptions: {
+                        }
+                    }, {
+                        id: 'members-series',
+                        name: 'Members (popularity)',
+                        yAxis: 1,
+                        data: $scope.membersData,
+                        tooltip: {
+                            // headerFormat: '<b>{series.name}</b><br>',
+                            pointFormat: 'Members: <b>{point.y:,.0f}</b>',
+                            padding: 50
+                        }
+                    }],
+
+                    colors: ['#2196F3', '#FFC107', '#90ed7d', '#f7a35c', '#8085e9',
+                        '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1']
+                });
+
+                console.log('Chart created successfully.');
                 $scope.loading = false;
             });
         };

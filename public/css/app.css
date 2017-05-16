@@ -169,8 +169,9 @@ body
     height: 100vh;
     overflow: hidden;
 
-
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .anime-view .anime-header
@@ -243,6 +244,11 @@ body
 .anime-view highchart > div
 {
     margin: 0 auto;
+}
+
+.anime-view #chart-container
+{
+    flex: 1;
 }
 
 /* CSS-only spinner element */
