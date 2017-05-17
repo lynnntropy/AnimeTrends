@@ -510,7 +510,7 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                 controller: 'HomeController'
             })
 
-            .when('/export', {
+            .when('/database', {
                 title: 'Database Dumps',
                 templateUrl: 'export.html',
                 controller: 'ExportController'
