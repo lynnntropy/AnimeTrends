@@ -4,12 +4,11 @@
             <img class="anime-image" src="{{selectedAnime.image}}">
             <div class="anime-text">
                 <h1 class="anime-title" ng-class="{'long': (selectedAnime.title.length > 40)}">{{selectedAnime.title}}</h1>
-                <p class="anime-data"><span class="anime-members">Members: <b>{{selectedAnime.members | number}}</b></span><span class="anime-rating">Current rating: <b>{{selectedAnime.rating}}</b></span></p>
+                <p class="anime-data"><span class="anime-members">Members: <b>{{selectedAnime.members | number}}</b></span><span class="anime-rating">Current rating: <b>{{selectedAnime.rating | number:2}}</b></span></p>
                 <a href="http://myanimelist.net/anime/{{selectedAnime.id}}/">View on MAL</a>
             </div>
         </div>
     </div>
-    <!--<highchart id="chart1" config="chartConfig"></highchart>-->
     <div id="chart-container"></div>
 
     <div class="loader-container" ng-if="loading">
