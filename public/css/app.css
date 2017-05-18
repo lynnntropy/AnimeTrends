@@ -31,10 +31,10 @@ body
     font-weight: 300;
 }
 
-.home .welcome-message h1
+.home .welcome-message .logo
 {
-    font-size: 45px;
-    font-weight: 100;
+    width: 350px;
+    margin-bottom: 30px;
 }
 
 .home .welcome-message hr
@@ -135,15 +135,39 @@ body
     flex-flow: column;
 }
 
+.sidebar .sidebar-header
+{
+    text-align: center;
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+.sidebar .sidebar-header .logo-image
+{
+    /*width: 200px;*/
+}
+
+.sidebar .search-container
+{
+    width: 100%;
+    padding: 0 20px;
+}
+
 .sidebar .anime-search
 {
     background: none;
+    border-radius: 0;
     border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: none;
     margin: 5px 0;
     color: #ffffff;
-
     flex: 0 1 auto;
+}
+
+.sidebar .anime-search:focus
+{
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .sidebar .list-tabs
@@ -156,7 +180,7 @@ body
 {
     flex: 1;
     text-align: center;
-    padding: 13px 0;
+    padding: 20px 0;
     cursor: pointer;
 
     color: #fff;
@@ -188,7 +212,7 @@ body
 {
     overflow-y: auto;
     height: 100%;
-    padding-bottom: 5px;
+    padding: 5px 0;
 
     -ms-overflow-style: none;
 

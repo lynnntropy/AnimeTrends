@@ -89,6 +89,11 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                 else return item.archived === 1 && $scope.archiveView;
             }
         };
+
+        $scope.deselectAnime = function()
+        {
+            $rootScope.selectedAnime = null;
+        };
     })
 
     .controller('HomeController', function($scope, backendService) {
@@ -104,11 +109,6 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
         var membersData = [];
         var episodePlotLines = [];
         $scope.loading = true;
-
-        $scope.deselectAnime = function()
-        {
-            $rootScope.selectedAnime = null;
-        };
 
         $scope.loadHistory = function()
         {
