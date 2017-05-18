@@ -94,6 +94,11 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
         {
             $rootScope.selectedAnime = null;
         };
+
+        $scope.clearSearch = function()
+        {
+            $scope.searchString = '';
+        }
     })
 
     .controller('HomeController', function($scope, backendService) {

@@ -148,6 +148,14 @@ body
     padding: 0 20px;
 }
 
+.sidebar .search-container .form-control-feedback
+{
+    color: #fff;
+    cursor: pointer;
+    pointer-events: all;
+    font-size: 20px;
+}
+
 .sidebar .anime-search
 {
     background: none;

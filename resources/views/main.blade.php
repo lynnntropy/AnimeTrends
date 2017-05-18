@@ -18,6 +18,7 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <link href="{{asset('node_modules/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('node_modules/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
 </head>
 <body>
@@ -29,7 +30,11 @@
                     <a href="/" ng-click="deselectAnime()"><img class="logo-image" src="/images/logo-white-small.png"></a>
                 </div>
                 <div class="search-container">
-                    <input type="text" class="form-control anime-search" placeholder="Search..." ng-model="searchString">
+                    <div class="form-group has-feedback">
+                        <input type="text" class="form-control has-feedback anime-search" placeholder="Search..." ng-model="searchString">
+                        <span ng-if="searchString" ng-click="clearSearch()" class="form-control-feedback" uib-tooltip="clear">&times;</span>
+                    </div>
+
                 </div>
                 <div class="list-tabs">
                     <div class="tab" ng-class="{'active': !archiveView}" ng-click="archiveView = false">Current <span class="count">(@{{current.length}})</span></div>
