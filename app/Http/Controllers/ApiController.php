@@ -23,9 +23,14 @@ class ApiController extends Controller
         return $anime->snapshots;
     }
 
-    public function getLatestUpdateTime()
+    public function getStats()
     {
         $time = Snapshot::orderBy('id', 'desc')->first()->created_at;
-        return ["timestamp" => $time->timestamp, "diff" => $time->diffForHumans()];
+        return [
+            "timestamp" => $time->timestamp,
+            "diff" => $time->diffForHumans(),
+            "anime_count" => Anime::count(),
+            "snapshot_count" => Snapshot::count()
+        ];
     }
 }

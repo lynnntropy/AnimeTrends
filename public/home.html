@@ -13,6 +13,14 @@
         <hr/>
         <p class="export">Want to use the data yourself? See <a href="/database">database dumps</a>.</p>
         <hr/>
-        <p class="updated">Database last updated <span class="diff">{{updated.diff}}</span></p>
+        <div class="stats">
+            <div ng-show="stats">
+                <p class="updated">Database last updated <span class="diff">{{stats.diff}}</span>.</p>
+                <p>Working with a total of <b>{{stats.snapshot_count | thousandSuffix:1}}</b> data points for <b>{{stats.anime_count}}</b> anime.</p>
+            </div>
+            <div ng-show="!stats">
+                Loading database stats...<br>&nbsp;
+            </div>
+        </div>
     </div>
 </div>

@@ -47,9 +47,9 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
             });
         };
 
-        var getUpdateTime = function()
+        var getStats = function()
         {
-            return $http.get('/api/updated').then(function (res) {
+            return $http.get('/api/stats').then(function (res) {
                 return res.data;
             });
         };
@@ -58,7 +58,7 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
             getAnimeList: getAnimeList,
             getHistoryForAnime: getHistoryForAnime,
             getAnime: getAnime,
-            getUpdateTime: getUpdateTime
+            getStats: getStats
         }
     })
 
@@ -92,8 +92,8 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
     })
 
     .controller('HomeController', function($scope, backendService) {
-        backendService.getUpdateTime().then(function (time) {
-            $scope.updated = time;
+        backendService.getStats().then(function (stats) {
+            $scope.stats = stats;
         })
     })
 

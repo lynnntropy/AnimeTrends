@@ -59,12 +59,22 @@ body
     margin-bottom: 10px;
 }
 
-.home .welcome-message .updated
+.home .welcome-message .stats
 {
     font-size: 14px;
 }
 
-.home .welcome-message .updated .diff
+.home .welcome-message .stats b
+{
+    font-weight: 500;
+}
+
+.home .welcome-message .stats p
+{
+    margin: 0;
+}
+
+.home .welcome-message .stats .diff
 {
     font-weight: 500;
 }
