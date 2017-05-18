@@ -107,8 +107,9 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
             else if (number >= 8) color = '#4CAF50';
             else if (number >= 7.5) color = '#8BC34A';
             else if (number >= 7) color = '#CDDC39';
-            else if (number >= 6) color = '#FFC107';
-            else if (number >= 5) color = '#FFC107';
+            else if (number >= 6.8) color = '#FFEB3B';
+            else if (number >= 6.5) color = '#FFC107';
+            else if (number >= 6) color = '#FF9800';
             else color = '#FF5722';
 
             return {
