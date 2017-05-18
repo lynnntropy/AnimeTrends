@@ -40,7 +40,7 @@
                     <div class="tab" ng-class="{'active': !archiveView}" ng-click="archiveView = false">Current <span class="count">(@{{current.length}})</span></div>
                     <div class="tab" ng-class="{'active': archiveView}" ng-click="archiveView = true">Archive <span class="count">(@{{archived.length}})</span></div>
                 </div>
-                <div class="list-container" ng-show="!archiveView">
+                <div class="list-container" ng-show="!loading && !archiveView">
                     <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in current | filter:searchString" ng-click="selectAnime(item)">
                         <div class="anime-item" ng-class="{'selected': (selectedAnime.id == item.id)}">
                             <p class="item-title">@{{item.title}}</p>
@@ -48,13 +48,16 @@
                         </div>
                     </a>
                 </div>
-                <div class="list-container" ng-show="archiveView">
+                <div class="list-container" ng-show="!loading && archiveView">
                     <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in archived | filter:searchString" ng-click="selectAnime(item)">
                         <div class="anime-item" ng-class="{'selected': (selectedAnime.id == item.id)}">
                             <p class="item-title">@{{item.title}}</p>
                             <p class="item-members">Members: @{{item.members | thousandSuffix:1}}</p>
                         </div>
                     </a>
+                </div>
+                <div class="sidebar-loader-container" ng-if="loading">
+                    <div class="sidebar-loader"></div>
                 </div>
             </div>
         </div>

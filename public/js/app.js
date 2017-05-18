@@ -63,7 +63,7 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
     })
 
     .controller('SidebarController', function($scope, $rootScope, backendService) {
-        $rootScope.loading = true;
+        $scope.loading = true;
         $scope.archiveView = false;
 
         $scope.current = [];
@@ -74,7 +74,7 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                 if (animeItem.archived) $scope.archived.push(animeItem);
                 else $scope.current.push(animeItem);
             });
-            $rootScope.loading = false;
+            $scope.loading = false;
         });
 
         $scope.selectAnime = function(anime)
