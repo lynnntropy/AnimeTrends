@@ -179,6 +179,11 @@ body
     border-bottom: 3px solid #ffffff;
 }
 
+.sidebar .list-tabs .tab .count
+{
+    opacity: 0.35;
+}
+
 .sidebar .list-container
 {
     overflow-y: auto;

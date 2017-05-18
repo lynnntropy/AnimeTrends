@@ -27,8 +27,8 @@
             <div class="sidebar" ng-cloak>
                 <input type="text" class="form-control anime-search" placeholder="Search..." ng-model="searchString">
                 <div class="list-tabs">
-                    <div class="tab" ng-class="{'active': !archiveView}" ng-click="archiveView = false">Current</div>
-                    <div class="tab" ng-class="{'active': archiveView}" ng-click="archiveView = true">Archive</div>
+                    <div class="tab" ng-class="{'active': !archiveView}" ng-click="archiveView = false">Current <span class="count">(@{{current.length}})</span></div>
+                    <div class="tab" ng-class="{'active': archiveView}" ng-click="archiveView = true">Archive <span class="count">(@{{archived.length}})</span></div>
                 </div>
                 <div class="list-container" ng-show="!archiveView">
                     <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in current | filter:searchString" ng-click="selectAnime(item)">
