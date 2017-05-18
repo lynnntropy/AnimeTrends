@@ -209,7 +209,7 @@ body
 
 .sidebar .list-tabs .tab .count
 {
-    opacity: 0.35;
+    color: #777777;
 }
 
 .sidebar .list-container
@@ -245,11 +245,11 @@ body
     overflow: hidden;
 }
 
-.sidebar .anime-item .item-members
+.sidebar .anime-item .item-details-line
 {
     margin: 0;
     font-size: 10px;
-    opacity: 0.5;
+    color: #7d7d7d;
 }
 
 .sidebar .anime-item:hover

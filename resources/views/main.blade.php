@@ -34,7 +34,6 @@
                         <input type="text" class="form-control has-feedback anime-search" placeholder="Search..." ng-model="searchString">
                         <span ng-if="searchString" ng-click="clearSearch()" class="form-control-feedback" uib-tooltip="clear">&times;</span>
                     </div>
-
                 </div>
                 <div class="list-tabs">
                     <div class="tab" ng-class="{'active': !archiveView}" ng-click="archiveView = false">Current <span class="count">(@{{current.length}})</span></div>
@@ -44,7 +43,7 @@
                     <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in current | filter:searchString" ng-click="selectAnime(item)">
                         <div class="anime-item" ng-class="{'selected': (selectedAnime.id == item.id)}">
                             <p class="item-title">@{{item.title}}</p>
-                            <p class="item-members">Members: @{{item.members | thousandSuffix:1}}</p>
+                            <p class="item-details-line">@{{item.members | thousandSuffix:1}} members, <span ng-style="getRatingStyle(item.rating)">@{{item.rating}}</span> average</p>
                         </div>
                     </a>
                 </div>
@@ -52,7 +51,7 @@
                     <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in archived | filter:searchString" ng-click="selectAnime(item)">
                         <div class="anime-item" ng-class="{'selected': (selectedAnime.id == item.id)}">
                             <p class="item-title">@{{item.title}}</p>
-                            <p class="item-members">Members: @{{item.members | thousandSuffix:1}}</p>
+                            <p class="item-details-line">@{{item.members | thousandSuffix:1}} members</p>
                         </div>
                     </a>
                 </div>
