@@ -142,11 +142,6 @@ body
     margin-bottom: 20px;
 }
 
-.sidebar .sidebar-header .logo-image
-{
-    /*width: 200px;*/
-}
-
 .sidebar .search-container
 {
     width: 100%;
@@ -174,13 +169,14 @@ body
 {
     display: flex;
     flex-direction: row;
+    height: 50px;
 }
 
 .sidebar .list-tabs .tab
 {
     flex: 1;
     text-align: center;
-    padding: 20px 0;
+    padding: 10px 0;
     cursor: pointer;
 
     color: #fff;
@@ -285,7 +281,6 @@ body
 
 .anime-view .anime-header .anime-card .anime-image
 {
-    /*float: left;*/
     margin-right: 20px;
     height: 120px;
     border-radius: 5px;
@@ -312,12 +307,8 @@ body
 
 .anime-view h1.anime-title
 {
-    /*text-align: center;*/
     margin: 0 0 0 0;
     font-size: 35px;
-    /*position: relative;*/
-    /*right: 3px;*/
-    /*float: left;*/
     font-weight: 300;
 }
 
@@ -334,7 +325,6 @@ body
 .anime-view h1.anime-title.long
 {
     font-size: 25px;
-    /*margin-top: 5px;*/
 }
 
 .anime-view highchart > div
