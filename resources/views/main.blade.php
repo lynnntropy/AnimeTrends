@@ -43,7 +43,7 @@
                     <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in current | filter:searchString" ng-click="selectAnime(item)">
                         <div class="anime-item" ng-class="{'selected': (selectedAnime.id == item.id)}">
                             <p class="item-title">@{{item.title}}</p>
-                            <p class="item-details-line">@{{item.members | thousandSuffix:1}} members, <span ng-style="getRatingStyle(item.rating)">@{{item.rating | number:2}}</span> average</p>
+                            <p class="item-details-line">@{{item.members | thousandSuffix:1}} members, <span ng-style="getRatingStyle(item.rating)">@{{item.rating | number:2}}</span> current average score</p>
                         </div>
                     </a>
                 </div>
@@ -51,7 +51,7 @@
                     <a href="/anime/@{{item.id}}/@{{item.title | slugify}}" ng-repeat="item in archived | filter:searchString" ng-click="selectAnime(item)">
                         <div class="anime-item" ng-class="{'selected': (selectedAnime.id == item.id)}">
                             <p class="item-title">@{{item.title}}</p>
-                            <p class="item-details-line">@{{item.members | thousandSuffix:1}} members, <span ng-style="getRatingStyle(item.rating)">@{{item.rating | number:2}}</span> average</p>
+                            <p class="item-details-line">@{{item.members | thousandSuffix:1}} members, <span ng-style="getRatingStyle(item.rating)">@{{item.rating | number:2}}</span> current average score</p>
                         </div>
                     </a>
                 </div>
