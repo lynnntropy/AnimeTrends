@@ -277,8 +277,8 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                         tooltip: {
                             headerFormat: '{point.x:%b %e, %H:%M (UTC)}<br>',
                             pointFormat: 'Average rating: <b>{point.y:.2f}</b><br>',
-                            crosshairs: [true],
-                            padding: 50
+                            // crosshairs: [true],
+                            // padding: 50
                         },
                         plotOptions: {
                         }
