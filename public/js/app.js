@@ -146,15 +146,17 @@ angular.module('animeStocks', ['ngRoute', 'slugifier', 'angular-google-analytics
                 console.log('Parsing complete. Drawing plotlines...');
 
                 var weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+                var episodeCounter = 0;
                 for(var i = $rootScope.selectedAnime.start * 1000; i < Date.now() + weekInMilliseconds * 3; i += weekInMilliseconds)
                 {
+                    episodeCounter++;
                     episodePlotLines.push({
                         color: '#8BC34A',
                         dashStyle: 'Dash',
                         width: 1,
                         value: i,
                         label: {
-                            text: 'New<br>episode<br>(Japan)',
+                            text: 'Ep. '+episodeCounter+'<br>(Japan)',
                             rotation: 0,
                             verticalAlign: 'bottom',
                             y: -50,
