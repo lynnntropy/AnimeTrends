@@ -9,9 +9,23 @@ body
     font-family: 'Roboto', sans-serif;
 }
 
+@media (min-width:992px)
+{
+    .sidebar-column
+    {
+        min-width: 350px;
+    }
+
+    .main
+    {
+        width: calc(100% - 350px);
+    }
+}
+
 .main
 {
     padding: 0;
+    width: calc(100% - 350px);
 }
 
 .home
