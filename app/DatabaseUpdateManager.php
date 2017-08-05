@@ -17,16 +17,28 @@ class DatabaseUpdateManager
 
         foreach ($seasonalAnime as $item)
         {
-            if ($item->type == 'TV' and $item->score != 0 and Anime::find($item->id) == null)
+            if ($item->type == 'TV' and $item->score != 0)
             {
-                $newAnime = new Anime;
-                $newAnime->id = $item->id;
-                $newAnime->title = $item->title;
-                $newAnime->image = $item->imageUrl;
-                $newAnime->members = $item->members;
-                $newAnime->rating = $item->score;
-                $newAnime->start = $item->startTimestamp;
-                $newAnime->save();
+                $existingAnime = Anime::find($item->id);
+
+                if ($existingAnime == null)
+                {
+                    // Add newly added TV anime to the database.
+                    $newAnime = new Anime;
+                    $newAnime->id = $item->id;
+                    $newAnime->title = $item->title;
+                    $newAnime->image = $item->imageUrl;
+                    $newAnime->members = $item->members;
+                    $newAnime->rating = $item->score;
+                    $newAnime->start = $item->startTimestamp;
+                    $newAnime->save();
+                }
+                else
+                {
+                    // Update the image URL in case it's changed in the meantime.
+                    $existingAnime->image = $item->imageUrl;
+                    $existingAnime->save();
+                }
             }
         }
 
@@ -54,23 +66,31 @@ class DatabaseUpdateManager
         $currentIds = [];
         foreach ($seasonalAnime as $item) $currentIds[] = $item->id;
 
-        // Loop through (non-archived!) anime,
-        // and archive any that are now not on the page.
+        // Loop through all anime,
+        // and update their archived status if it doesn't match
+        // the current state of the season page.
 
-        $animeList = Anime::where('archived', false)->get();
-        foreach($animeList as $item)
+        $allAnime = Anime::all();
+        foreach($allAnime as $item)
         {
-            if (!in_array($item->id, $currentIds))
+            if (!in_array($item->id, $currentIds) && $item->archived == false)
             {
                 $item->archived = true;
+                $item->save();
+            }
+            else if (in_array($item->id, $currentIds) && $item->archived == true)
+            {
+                $item->archived = false;
                 $item->save();
             }
         }
 
         // Generate updated database dumps in a number of formats.
 
-        self::generateCsvDumps();
-        self::generateJsonDumps();
+        // CSV and JSON currently disabled because they were causing PHP to run out of memory.
+
+//        self::generateCsvDumps();
+//        self::generateJsonDumps();
         self::generateDatabaseDump();
     }
 

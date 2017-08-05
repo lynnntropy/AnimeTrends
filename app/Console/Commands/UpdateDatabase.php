@@ -24,7 +24,6 @@ class UpdateDatabase extends Command
     /**
      * Create a new command instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -38,6 +37,7 @@ class UpdateDatabase extends Command
      */
     public function handle()
     {
+        $this->info('Running database update...');
         DatabaseUpdateManager::update();
         $this->info('Database update successful.');
     }
