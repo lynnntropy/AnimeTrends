@@ -12,7 +12,7 @@ class UpdateDatabase extends Command
      *
      * @var string
      */
-    protected $signature = 'animestocks:update';
+    protected $signature = 'animetrends:update';
 
     /**
      * The console command description.
