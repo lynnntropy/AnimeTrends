@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Anime;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Routing\Controller;
 
-class WebController extends BaseController
+class WebController extends Controller
 {
     public function home()
     {
