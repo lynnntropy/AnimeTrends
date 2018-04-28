@@ -14,6 +14,6 @@ class Anime extends Model
 
     public function snapshots()
     {
-        return $this->hasMany('App\Snapshot', 'anime_id');
+        return $this->hasMany('App\Models\Snapshot', 'anime_id');
     }
 }
