@@ -14,6 +14,8 @@ class Anime extends Model
 
     public function snapshots()
     {
-        return $this->hasMany('App\Models\Snapshot', 'anime_id');
+        return $this
+            ->hasMany('App\Models\Snapshot', 'anime_id')
+            ->select(['created_at as timestamp', 'rating', 'members']);
     }
 }
