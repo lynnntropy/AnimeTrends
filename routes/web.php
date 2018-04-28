@@ -11,5 +11,3 @@
 |
 */
 
-Route::get('/', 'WebController@home');
-Route::get('/anime/{anime}/{slug?}', 'WebController@animePage');
