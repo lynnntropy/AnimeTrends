@@ -26,7 +26,7 @@ class AddLatestRank extends Migration
     public function down()
     {
         Schema::table('anime', function (Blueprint $table) {
-            //
+            $table->dropColumn('members');
         });
     }
 }
