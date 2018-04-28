@@ -3,6 +3,8 @@
 namespace App;
 
 
+use App\Models\Anime;
+use App\Models\Snapshot;
 use App\Services\SeasonalAnimeService;
 use Maatwebsite\Excel\Facades\Excel;
 use Ifsnop\Mysqldump as IMysqldump;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Anime;
-use App\Snapshot;
+use App\Models\Anime;
+use App\Models\Snapshot;
 use Illuminate\Routing\Controller;
 
 class ApiController extends Controller
