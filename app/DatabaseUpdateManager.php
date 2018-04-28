@@ -122,7 +122,7 @@ class DatabaseUpdateManager
 
     public static function generateDatabaseDump()
     {
-        $dump = new IMysqldump\Mysqldump('mysql:host=localhost;dbname=animestocks', env('DB_USERNAME'), env('DB_PASSWORD'));
+        $dump = new IMysqldump\Mysqldump('mysql:host=localhost;dbname=animetrends', env('DB_USERNAME'), env('DB_PASSWORD'));
         $dump->start(storage_path('app/public/dumps/animestocks.sql'));
     }
 }
