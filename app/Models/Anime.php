@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Anime extends Model
 {
     protected $table = 'anime';
+    protected $visible = ['id', 'title', 'members', 'rating', 'archived'];
 
     public function snapshots()
     {
