@@ -2,12 +2,13 @@
 
 namespace App;
 
-
 use App\Models\Anime;
 use App\Models\Snapshot;
 use App\Services\SeasonalAnimeService;
-use Maatwebsite\Excel\Facades\Excel;
-use Ifsnop\Mysqldump as IMysqldump;
+use Goutte\Client;
+use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseUpdateManager
 {
@@ -29,17 +30,29 @@ class DatabaseUpdateManager
                     $newAnime = new Anime;
                     $newAnime->id = $item->id;
                     $newAnime->title = $item->title;
-                    $newAnime->image = $item->imageUrl;
+                    $newAnime->original_image_url = $item->imageUrl;
                     $newAnime->members = $item->members;
                     $newAnime->rating = $item->score;
                     $newAnime->start = $item->startTimestamp;
                     $newAnime->save();
+
+                    self::fetchImage($item->id, $item->imageUrl);
                 }
                 else
                 {
-                    // Update the image URL in case it's changed in the meantime.
-                    $existingAnime->image = $item->imageUrl;
-                    $existingAnime->save();
+                    // Check if the image URL has changed in the meantime.
+
+                    if ($existingAnime->original_image_url != $item->imageUrl) {
+
+                        // Fetch the new image.
+
+                        self::fetchImage($item->id, $item->imageUrl);
+
+                        // Update the URL in the database.
+
+                        $existingAnime->original_image_url = $item->imageUrl;
+                        $existingAnime->save();
+                    }
                 }
             }
         }
@@ -68,13 +81,14 @@ class DatabaseUpdateManager
         $currentIds = [];
         foreach ($seasonalAnime as $item) $currentIds[] = $item->id;
 
-        // Loop through all anime,
-        // and update their archived status if it doesn't match
-        // the current state of the season page.
+        // Loop through all anime to update any fields that need updating.
 
         $allAnime = Anime::all();
         foreach($allAnime as $item)
         {
+            // Update the show's archived status if it doesn't match
+            // the current state of the season page.
+
             if (!in_array($item->id, $currentIds) && $item->archived == false)
             {
                 $item->archived = true;
@@ -86,45 +100,54 @@ class DatabaseUpdateManager
                 $item->save();
             }
         }
-
-        // Generate updated database dumps in a number of formats.
-
-        // CSV and JSON currently disabled because they were causing PHP to run out of memory.
-
-//        self::generateCsvDumps();
-//        self::generateJsonDumps();
-        self::generateDatabaseDump();
     }
 
-    public static function generateCsvDumps()
+    public static function fetchAllImages()
     {
-        Excel::create('anime', function($excel) {
-            $excel->sheet('sheet', function($sheet) {
-                $sheet->fromModel(Anime::all());
-            });
-        })->store('csv', storage_path('app/public/dumps'));
+        Log::useFiles('php://stdout', 'info');
 
-        Excel::create('snapshots', function($excel) {
-            $excel->sheet('sheet', function($sheet) {
-                $sheet->fromModel(Snapshot::all());
-            });
-        })->store('csv', storage_path('app/public/dumps'));
+        // Create the Goutte client
+        $client = new Client();
+        $client->setClient(new GuzzleClient(['verify' => false])); // SSL cert verification fails if we don't do this
+
+        // Loop over all anime in the database
+        $allAnime = Anime::all();
+        foreach($allAnime as $item)
+        {
+            Log::info("Processing anime: " . $item->title . " (ID " . $item->id . ")");
+            Log::info("Fetching page...");
+
+            // Fetch the page into a node
+            $crawler = $client->request('GET', 'https://myanimelist.net/anime/' . $item->id);
+
+            // Find the image URL
+            // (potentially unreliable since MAL's HTML is a crazy mess
+            // of tables and no CSS classes to be found anywhere)
+
+            if ($crawler->filter('img[src*="myanimelist.cdn-dena.com/images/anime"]')->count() > 0) {
+                $imageUrl = $crawler->filter('img[src*="myanimelist.cdn-dena.com/images/anime"]')->first()->attr('src');
+            } else {
+                Log::warning("No suitable <img> found on page!");
+                continue;
+            }
+
+            Log::info("Fetching image...");
+
+            // Fetch the image
+            self::fetchImage($item->id, $imageUrl);
+
+            // Update the image URL in the database
+
+            $item->original_image_url = $imageUrl;
+            $item->save();
+
+            Log::info("Done.");
+        }
     }
 
-    public static function generateJsonDumps()
+    private static function fetchImage($animeId, $imageUrl)
     {
-        $fp = fopen(storage_path('app/public/dumps/anime.json'), 'w');
-        fwrite($fp, (string) Anime::all());
-        fclose($fp);
-
-        $fp = fopen(storage_path('app/public/dumps/snapshots.json'), 'w');
-        fwrite($fp, (string) Snapshot::all());
-        fclose($fp);
-    }
-
-    public static function generateDatabaseDump()
-    {
-        $dump = new IMysqldump\Mysqldump('mysql:host=localhost;dbname=animetrends', env('DB_USERNAME'), env('DB_PASSWORD'));
-        $dump->start(storage_path('app/public/dumps/animestocks.sql'));
+        $fileContents = file_get_contents($imageUrl);
+        Storage::disk('public')->put("cover_images/$animeId.jpg", $fileContents);
     }
 }

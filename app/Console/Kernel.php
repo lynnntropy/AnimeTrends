@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\FetchAllImages;
 use App\Console\Commands\UpdateDatabase;
 use App\DatabaseUpdateManager;
 use Illuminate\Console\Scheduling\Schedule;
@@ -15,7 +16,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        UpdateDatabase::class
+        UpdateDatabase::class,
+        FetchAllImages::class,
     ];
 
     /**
