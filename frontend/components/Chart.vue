@@ -165,11 +165,8 @@
               value: 6.5,
               color: '#FF9800'
             }, {
-              value: 6.8,
-              color: '#FFC107'
-            }, {
               value: 7,
-              color: '#FFEB3B'
+              color: '#FFC107'
             }, {
               value: 7.5,
               color: '#CDDC39'
