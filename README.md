@@ -11,15 +11,20 @@ Please see the README files in the individual directories for how to get started
 
 ## Built With
 
-* PHP
-* [Laravel](https://laravel.com/) - A modern PHP framework
-* [Composer](https://getcomposer.org/) - Dependency manager for PHP
+### Backend
 
-* [Vue.js](https://vuejs.org/) - A JavaScript framework
-* [Nuxt.js](https://nuxtjs.org/) - A framework for universal Vue.js apps
-* [Sass](https://sass-lang.com/) - A CSS extension language 
-* [Webpack](https://webpack.js.org/) - A JavaScript module bundler 
-* [Yarn](https://yarnpkg.com/en/) - A JavaScript package manager
+- PHP
+- [Laravel](https://laravel.com/) - A modern PHP framework  
+- [Composer](https://getcomposer.org/) - Dependency manager for PHP  
+
+### Frontend
+
+- [Vue.js](https://vuejs.org/) - A JavaScript framework  
+- [Nuxt.js](https://nuxtjs.org/) - A framework for universal Vue.js apps  
+- [Sass](https://sass-lang.com/) - A CSS extension language  
+- [Webpack](https://webpack.js.org/) - A JavaScript module bundler  
+- [Yarn](https://yarnpkg.com/en/) - A JavaScript package manager  
+
 
 ## Authors
 
