@@ -1,0 +1,48 @@
+@import 'fonts';
+
+// Variables
+
+$primary-font: 'Titillium Web', sans-serif;
+
+// Mixins
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+@mixin cover-parent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+// Breakpoints
+
+@mixin breakpoint-sm {
+  @media (min-width: 576px) {
+    @content
+  }
+}
+
+@mixin breakpoint-md {
+  @media (min-width: 768px) {
+    @content
+  }
+}
+
+@mixin breakpoint-lg {
+  @media (min-width: 992px) {
+    @content
+  }
+}
+
+@mixin breakpoint-xl {
+  @media (min-width: 1200px) {
+    @content
+  }
+}

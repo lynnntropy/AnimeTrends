@@ -1,0 +1,73 @@
+@import 'main';
+
+html {
+  font-size: 16px;
+  word-spacing: 1px;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background-color: #fafafa;
+  font-family: $primary-font;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+input {
+  font-family: $primary-font;
+}
+
+a {
+  text-decoration: none;
+}
+
+
+// Page transition
+
+//.page-enter-active, .page-leave-active {
+//  transition: all .2s ease;
+//}
+//
+//.page-enter, .page-leave-active {
+//  opacity: 0;
+//}
+
+// Layout transition
+
+//.layout-enter-active, .layout-leave-active {
+//  transition: all .2s ease;
+//}
+//.layout-enter, .layout-leave-active {
+//  opacity: 0;
+//}
+
+//::selection {
+//  background: $sol-purple;
+//  color: #fff;
+//}
+
+//a,
+//a > h1,
+//a > h2,
+//a > h3,
+//a > h4 {
+//  text-decoration: none;
+//
+//  &:not(.no-animation) {
+//    &:not(.btn) {
+//      transition: opacity 0.2s ease;
+//      &:hover {
+//        opacity: 0.7;
+//      }
+//    }
+//  }
+//}

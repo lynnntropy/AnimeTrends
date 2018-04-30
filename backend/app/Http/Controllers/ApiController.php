@@ -15,7 +15,10 @@ class ApiController extends Controller
 
     public function getAnime(Anime $anime)
     {
-        return $anime;
+        return [
+            'anime' => $anime,
+            'snapshotCount' => $anime->snapshots()->count()
+        ];
     }
 
     public function getSnapshotsForAnime(Anime $anime)

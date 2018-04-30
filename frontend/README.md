@@ -1,19 +1,30 @@
-# AnimeTrends
+# AnimeTrends (Backend)
 
 AnimeTrends is a website and open-source project with the mission of tracking the ratings and popularity of titles on MyAnimeList over time, and making this data 
 freely available to anyone who wants it.
 
-This repository contains both the backend application (written in Laravel/PHP) and the frontend (written in Vue.js) for AnimeTrends.
+This repository contains the frontend application for AnimeTrends, written in Vue.js.
 
 ## Build Setup
 
-Please see the README files in the individual directories for how to get starte with either the backend or the frontend. 
+``` bash
+# install dependencies
+$ npm install # Or yarn install
+
+# serve with hot reload at localhost:3000
+$ npm run dev
+
+# build for production and launch server
+$ npm run build
+$ npm start
+
+# generate static project
+$ npm run generate
+```
+
+For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
 
 ## Built With
-
-* PHP
-* [Laravel](https://laravel.com/) - A modern PHP framework
-* [Composer](https://getcomposer.org/) - Dependency manager for PHP
 
 * [Vue.js](https://vuejs.org/) - A JavaScript framework
 * [Nuxt.js](https://nuxtjs.org/) - A framework for universal Vue.js apps
