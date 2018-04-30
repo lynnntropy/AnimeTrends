@@ -5,9 +5,9 @@ freely available to anyone who wants it.
 
 This repository contains both the backend application (written in Laravel/PHP) and the frontend (written in Vue.js) for AnimeTrends.
 
-## Build Setup
+## Getting Started
 
-Please see the README files in the individual directories for how to get starte with either the backend or the frontend. 
+Please see the README files in the individual directories for how to get started with either the backend or the frontend. 
 
 ## Built With
 
