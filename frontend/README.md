@@ -1,11 +1,6 @@
 # AnimeTrends (Backend)
 
-AnimeTrends is a website and open-source project with the mission of tracking the ratings and popularity of titles on MyAnimeList over time, and making this data 
-freely available to anyone who wants it.
-
-This repository contains the frontend application for AnimeTrends, written in Vue.js.
-
-## Build Setup
+## Getting Started
 
 ``` bash
 # install dependencies
