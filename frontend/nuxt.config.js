@@ -57,6 +57,6 @@ module.exports = {
     '~/plugins/filter-round',
     '~/plugins/filter-slugify',
 
-    // { src: '~/plugins/highcharts', ssr: false },
+    { src: '~/plugins/tracking-google-analytics', ssr: false },
   ],
 }
