@@ -47,10 +47,14 @@ module.exports = {
     }
   },
 
-  env: {
-    apiBaseUrl: process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/api' : '/api',
-    backendBaseUrl: process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/' : '/',
-  },
+  // env: {
+  //   apiBaseUrl: process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/api' : '/api',
+  //   backendBaseUrl: process.env.NODE_ENV !== 'production' ? 'http://localhost:8000/' : '/',
+  // },
+
+  modules: [
+    '@nuxtjs/dotenv'
+  ],
 
   plugins: [
     '~/plugins/axios-defaults',

@@ -13,6 +13,7 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "@nuxtjs/dotenv": "^1.1.1",
     "axios": "^0.18.0",
     "highcharts": "^6.1.0",
     "highcharts-vue": "^1.0.1",
