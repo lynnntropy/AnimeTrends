@@ -62,6 +62,7 @@
       h1 {
         font-size: 1.5rem;
         color: #333;
+        display: inline-block;
       }
 
       p {
