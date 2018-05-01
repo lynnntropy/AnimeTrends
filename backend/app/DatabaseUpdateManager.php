@@ -5,10 +5,12 @@ namespace App;
 use App\Models\Anime;
 use App\Models\Snapshot;
 use App\Services\SeasonalAnimeService;
+use Carbon\Carbon;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Jikan\Jikan;
 
 class DatabaseUpdateManager
 {
@@ -33,7 +35,6 @@ class DatabaseUpdateManager
                     $newAnime->original_image_url = $item->imageUrl;
                     $newAnime->members = $item->members;
                     $newAnime->rating = $item->score;
-                    $newAnime->start = $item->startTimestamp;
                     $newAnime->save();
 
                     self::fetchImage($item->id, $item->imageUrl);
@@ -92,11 +93,13 @@ class DatabaseUpdateManager
             if (!in_array($item->id, $currentIds) && $item->archived == false)
             {
                 $item->archived = true;
+                $item->archived_at = Carbon::now()->toDateTimeString();
                 $item->save();
             }
             else if (in_array($item->id, $currentIds) && $item->archived == true)
             {
                 $item->archived = false;
+                $item->archived_at = null;
                 $item->save();
             }
         }
@@ -142,6 +145,22 @@ class DatabaseUpdateManager
             $item->save();
 
             Log::info("Done.");
+        }
+    }
+
+    private static function updateRecentlyArchived()
+    {
+        $jikan = new Jikan;
+
+        $recentlyArchivedAnime = Anime::where('archived', '=', 1)
+                            ->whereDate('archived_at', '>=', Carbon::now()->subMonth())
+                            ->get();
+
+        foreach ($recentlyArchivedAnime as $anime) {
+            $currentData = $jikan->Anime($anime->id)->response;
+            $anime->rating = $currentData['score'];
+            $anime->members = $currentData['members'];
+            $anime->save();
         }
     }
 

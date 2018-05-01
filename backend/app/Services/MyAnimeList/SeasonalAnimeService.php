@@ -11,7 +11,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class SeasonalAnimeService
 {
     /**
-     * @return array
+     * @return SeasonalAnimeItem[]
      */
     public static function getSeasonalAnime()
     {
@@ -41,12 +41,8 @@ class SeasonalAnimeService
             $members = intval(str_replace(",", "", $node->filter("span.member")->first()->text()));
             $imageElement = $node->filter("div.image > img")->first();
             $imageUrl = $imageElement->attr('data-src') ? $imageElement->attr('data-src') : $imageElement->attr('src');
-            $dateString = $node->filter("span.remain-time")->first()->text();
 
-            // Parse the date/time string into a Unix timestamp
-            $startTimestamp = strtotime($dateString);
-
-            $results[] = new SeasonalAnimeItem($id, $title, $score, $members, $type, $imageUrl, $startTimestamp);
+            $results[] = new SeasonalAnimeItem($id, $title, $score, $members, $type, $imageUrl);
         });
 
         return $results;
