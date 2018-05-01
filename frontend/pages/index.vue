@@ -15,6 +15,13 @@
           but that's all they are. It's not a good idea to take them as an objective measure of a show's quality, or even just as a general indicator of public opinion.
         </p>
       </section>
+      <section class="stats">
+        <p>Database last updated <strong>{{ stats.diff }}</strong>.</p>
+        <p>
+          Working with a total of <strong>{{ stats.snapshot_count | suffixedNumber(1) }}</strong> data points
+          for <strong>{{ stats.anime_count }}</strong> anime.
+        </p>
+      </section>
     </section>
   </section>
 </template>
@@ -23,6 +30,14 @@
   import axios from 'axios'
 
   export default {
+
+    async asyncData() {
+      const { data } = await axios.get(`/stats`)
+      return {
+        stats: data
+      }
+    },
+
     head: {
       title: 'Home'
     }
@@ -73,6 +88,15 @@
       border: 1px solid rgba(black, 0.05);
       text-align: left;
       padding: 0.5rem 1rem;
+    }
+
+    .stats {
+      margin-top: 1rem;
+      p {
+        font-size: 14px;
+        margin: 0;
+        color: #888;
+      }
     }
   }
 </style>
