@@ -1,12 +1,12 @@
 <template>
   <section class="anime-information">
     <section class="image">
-      <a :href="`https://myanimelist.net/anime/${anime.id}`" target="_blank" rel="nofollow">
+      <a :href="`https://myanimelist.net/anime/${anime.id}`" target="_blank" rel="noopener">
         <img :src="getImageUrl(anime.id)">
       </a>
     </section>
     <section class="details">
-      <a :href="`https://myanimelist.net/anime/${anime.id}`" target="_blank" rel="nofollow">
+      <a :href="`https://myanimelist.net/anime/${anime.id}`" target="_blank" rel="noopener">
         <h1>{{ anime.title }}</h1>
       </a>
       <p>MyAnimeList members: <span class="members">{{ anime.members | suffixedNumber(1) }}</span></p>
