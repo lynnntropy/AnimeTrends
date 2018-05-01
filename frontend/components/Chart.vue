@@ -89,7 +89,7 @@
           yAxis: [{
             id: 'rating-axis',
             title: {
-              text: 'Average Rating'
+              text: 'Score'
             },
             softMin: 5.5,
             softMax: 10,
@@ -133,15 +133,15 @@
 
           series: [{
             id: 'rating-series',
-            name: 'Average Rating',
+            name: 'Score',
             yAxis: 0,
             data: ratingData,
-            // tooltip: {
-            //   headerFormat: '{point.x:%b %e, %H:%M (UTC)}<br>',
-            //   pointFormat: 'Average rating: <b>{point.y:.2f}</b><br>',
-            //   // crosshairs: [true],
-            //   // padding: 50
-            // },
+            tooltip: {
+              headerFormat: '<span style="font-size: 10px">{point.x:%b %e, %H:%M (UTC)}</span><br>',
+              pointFormat: '<span style="color:{point.color}">\u25CF</span> Score: <b>{point.y:.2f}</b><br>',
+              // crosshairs: [true],
+              // padding: 50
+            },
 
 
             dataLabels: {
@@ -185,10 +185,9 @@
             name: 'Members',
             yAxis: 1,
             data: membersData,
-            // tooltip: {
-            //   pointFormat: 'Members: <b>{point.y:,.0f}</b>',
-            //   padding: 50
-            // }
+            tooltip: {
+              headerFormat: '<span style="font-size: 10px">{point.x:%b %e, %H:%M (UTC)}</span><br>'
+            },
 
             marker: {
               enabled: false

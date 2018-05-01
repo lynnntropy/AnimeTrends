@@ -10,7 +10,7 @@
         <h1>{{ anime.title }}</h1>
       </a>
       <p>MyAnimeList members: <span class="members">{{ anime.members | suffixedNumber(1) }}</span></p>
-      <p>Current rating: <ColoredRating :rating="anime.rating" /></p>
+      <p>Current score: <ColoredRating :rating="anime.rating" /></p>
     </section>
   </section>
 </template>

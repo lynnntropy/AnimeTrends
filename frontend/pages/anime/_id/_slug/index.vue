@@ -38,9 +38,9 @@
       return {
         title: this.anime.title,
         meta: [
-          { hid: 'description', name: 'description', content: `MyAnimeList rating and popularity charts for ${this.anime.title}` },
+          { hid: 'description', name: 'description', content: `MyAnimeList score and popularity charts for ${this.anime.title}` },
           { property: "og:title", content: `AnimeTrends - ${this.anime.title}` },
-          { property: "og:description", content: `MyAnimeList rating and popularity charts for ${this.anime.title}.` },
+          { property: "og:description", content: `MyAnimeList score and popularity charts for ${this.anime.title}.` },
         ],
       }
     }

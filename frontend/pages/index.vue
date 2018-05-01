@@ -4,14 +4,14 @@
       <h1>AnimeTrends</h1>
 
       <p>Welcome to AnimeTrends!</p>
-      <p>This website allows anyone to observe how the ratings and<br>popularity of anime on MyAnimeList change over time.</p>
+      <p>This website allows anyone to observe how the scores and<br>popularity of anime on MyAnimeList change over time.</p>
       <p>Pick a show from the list on the left to get started.</p>
       <section class="mal-note">
         <p class="small">
-          <strong>A note on MyAnimeList ratings</strong>
+          <strong>A note on MyAnimeList scores</strong>
         </p>
         <p class="small">
-          MAL ratings are an interesting gauge of public opinion for a certain segment of the anime community,
+          MAL scores are an interesting gauge of public opinion for a certain segment of the anime community,
           but that's all they are. It's not a good idea to take them as an objective measure of a show's quality, or even just as a general indicator of public opinion.
         </p>
       </section>
