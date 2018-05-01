@@ -103,6 +103,8 @@ class DatabaseUpdateManager
                 $item->save();
             }
         }
+
+        self::updateRecentlyArchived();
     }
 
     public static function fetchAllImages()
@@ -148,6 +150,10 @@ class DatabaseUpdateManager
         }
     }
 
+    /**
+     *  Update recently archived shows.
+     *  This method uses Jikan to scrape each show's page individually, rather than using the season page.
+     */
     private static function updateRecentlyArchived()
     {
         $jikan = new Jikan;
@@ -158,9 +164,15 @@ class DatabaseUpdateManager
 
         foreach ($recentlyArchivedAnime as $anime) {
             $currentData = $jikan->Anime($anime->id)->response;
+
             $anime->rating = $currentData['score'];
             $anime->members = $currentData['members'];
             $anime->save();
+
+            $snapshot = new Snapshot;
+            $snapshot->rating = $currentData['score'];
+            $snapshot->members = $currentData['members'];
+            $anime->snapshots()->save($snapshot);
         }
     }
 
