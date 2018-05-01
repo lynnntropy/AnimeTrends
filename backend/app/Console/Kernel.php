@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () {
             DatabaseUpdateManager::update();
-        })->hourly();
+        })->twiceDaily(0, 12);
     }
 
     /**
