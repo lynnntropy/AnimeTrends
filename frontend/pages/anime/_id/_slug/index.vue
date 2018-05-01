@@ -36,7 +36,8 @@
 
     head () {
       return {
-        title: this.anime.title
+        title: this.anime.title,
+        description: `MyAnimeList rating and popularity charts for ${this.anime.title}`
       }
     }
   }
