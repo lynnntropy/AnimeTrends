@@ -28,7 +28,7 @@
 
     methods: {
       getImageUrl(animeId) {
-        return `${process.env.backendBaseUrl}storage/cover_images/${animeId}.jpg`
+        return `${process.env.BACKEND_BASE_URL}storage/cover_images/${animeId}.jpg`
       }
     }
   }
