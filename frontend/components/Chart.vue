@@ -91,8 +91,8 @@
             title: {
               text: 'Score'
             },
-            softMin: 5.5,
-            softMax: 10,
+            softMin: 7,
+            softMax: 9,
             opposite: true,
           }, {
             id: 'members-axis',
@@ -108,28 +108,6 @@
               animation: false
             }
           },
-
-          // navigator: {
-          //   enabled: false,
-          //   // xAxis: {
-          //   //   units: [[
-          //   //     'day',
-          //   //     [1]
-          //   //   ], [
-          //   //     'week',
-          //   //     [1]
-          //   //   ], [
-          //   //     'month',
-          //   //     [1, 3, 6]
-          //   //   ], [
-          //   //     'year',
-          //   //     null
-          //   //   ]],
-          //   //   labels: {
-          //   //     format: '{value:%b %e}'
-          //   //   }
-          //   // }
-          // },
 
           series: [{
             id: 'rating-series',
