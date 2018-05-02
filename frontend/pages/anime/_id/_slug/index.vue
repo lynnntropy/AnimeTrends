@@ -64,6 +64,7 @@
     }
 
     .chart-area {
+      overflow: hidden;
     }
   }
 </style>
