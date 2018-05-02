@@ -234,6 +234,8 @@
       align-items: center;
       justify-content: center;
 
+      min-height: 15rem;
+
       .loading-animation {
         position: relative;
         top: 5px;

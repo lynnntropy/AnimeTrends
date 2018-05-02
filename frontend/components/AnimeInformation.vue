@@ -36,6 +36,8 @@
 
 <style scoped lang="scss">
 
+  @import "../scss/main";
+
   a {
     text-decoration: none;
   }
@@ -50,19 +52,28 @@
     border-bottom: 1px solid #eee;
 
     .image {
-      height: 5.5rem;
-      min-width: 3.75rem;
+      height: 4.75rem;
+      min-width: 3rem;
       img {
         height: 100%;
         border-radius: 0.25rem;
+      }
+
+      @include breakpoint-md {
+        height: 5.5rem;
+        min-width: 3.75rem;
       }
     }
 
     .details {
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.1rem;
         color: #333;
         display: inline-block;
+
+        @include breakpoint-md{
+          font-size: 1.5rem;
+        }
       }
 
       p {

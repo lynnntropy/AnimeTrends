@@ -4,8 +4,8 @@
       <h1>AnimeTrends</h1>
 
       <p>Welcome to AnimeTrends!</p>
-      <p>This website allows anyone to observe how the scores and<br>popularity of anime on MyAnimeList change over time.</p>
-      <p>Pick a show from the list on the left to get started.</p>
+      <p>This website allows anyone to observe how the scores and<br class="desktop-only">popularity of anime on MyAnimeList change over time.</p>
+      <p>Pick a show from the list to get started.</p>
       <section class="mal-note">
         <p class="small">
           <strong>A note on MyAnimeList scores</strong>
@@ -45,10 +45,23 @@
 </script>
 
 <style scoped lang="scss">
+
+  @import '../scss/main';
+
+  .desktop-only {
+    display: none;
+
+    @include breakpoint-md {
+      display: inherit;
+    }
+  }
+
   .home {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    padding: 1rem;
 
     .content {
       text-align: center;
@@ -70,7 +83,11 @@
     p {
       margin-bottom: 0.5rem;
       color: #555;
-      font-size: 1.2rem;
+      font-size: 1rem;
+
+      @include breakpoint-md {
+        font-size: 1.2rem;
+      }
 
       strong {
         font-weight: 600;

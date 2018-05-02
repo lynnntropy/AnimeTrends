@@ -88,6 +88,8 @@
 
 <style scoped lang="scss">
 
+  @import '../scss/main';
+
   .sidebar-transition-enter-active, .sidebar-transition-leave-active {
     transition: opacity .15s;
   }
@@ -112,7 +114,13 @@
     flex-direction: column;
     align-items: center;
 
-    max-height: 100vh;
+    max-width: 100vw;
+
+    @include breakpoint-md {
+      max-height: 100vh;
+    }
+
+
 
     .header {
       margin: 1rem;
@@ -182,6 +190,7 @@
 
     .loader-container {
       height: 100%;
+      min-height: 15rem;
       align-self: stretch;
       flex: 1 1 auto;
 
@@ -191,9 +200,12 @@
     }
 
     .list-container {
-      height: 100%;
       align-self: stretch;
       flex: 1 1 auto;
+
+      @include breakpoint-md {
+        height: 100%;
+      }
 
       overflow-y: auto;
       .anime-list {
