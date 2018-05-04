@@ -20,6 +20,8 @@
   import axios from 'axios'
   import ScaleLoader from 'vue-spinner/src/ScaleLoader.vue'
 
+  const maximumEpisodePlotlines = 30
+
   export default {
     props: ['animeId'],
 
@@ -34,26 +36,63 @@
     },
 
     async mounted () {
-      const { data } = await axios.get(`/anime/${this.animeId}/history`)
-      this.initializeChart(data)
+      const { data: history } = await axios.get(`/anime/${this.animeId}/history`)
+      const { data: episodes } = await axios.get(`/anime/${this.animeId}/episodes`)
+      this.initializeChart(history, episodes)
     },
 
     methods: {
 
       mysqlToIsoDateTime: (dateTimeString) => dateTimeString.replace(' ', 'T') + "+00:00",
 
-      initializeChart (data) {
+      initializeChart (history, episodes) {
 
         // Define the arrays that will hold the series data in the format Highcharts expects.
 
         const ratingData = [];
         const membersData = [];
+        const plotLines = [];
 
         // Parse the raw snapshots and populate the arrays.
 
-        for (let i = 0; i < data.length; i++) {
-          ratingData.push([Date.parse(this.mysqlToIsoDateTime(data[i].timestamp)), data[i].rating]);
-          membersData.push([Date.parse(this.mysqlToIsoDateTime(data[i].timestamp)), data[i].members]);
+        for (let i = 0; i < history.length; i++) {
+          ratingData.push([Date.parse(this.mysqlToIsoDateTime(history[i].timestamp)), history[i].rating]);
+          membersData.push([Date.parse(this.mysqlToIsoDateTime(history[i].timestamp)), history[i].members]);
+        }
+
+        // parse the episodes (if we have any) and make plotlines from them
+
+        // Limit number of plotlines for readability
+        if (episodes.length < maximumEpisodePlotlines) {
+          episodes.forEach(episode => {
+
+            // Don't draw episodes in the future
+            if (Date.parse(episode.aired_date) < new Date()) {
+              plotLines.push({
+                value: Date.parse(episode.aired_date),
+                color: 'rgba(0, 0, 0, 0.1)',
+                width: 2,
+                dashStyle: 'Dash',
+                zIndex: 1000,
+                label: {
+                  text: `Ep. ${episode.episode_number}`,
+                  rotation: 60,
+                  verticalAlign: 'bottom',
+                  y: -75,
+                  x: 5,
+                  style: {
+                    fontSize: '0.9rem',
+                    // color: '#aaa',
+                    fontWeight: 700,
+                    color: 'rgba(0, 0, 0, 0.3)',
+                    // fontSize: '14px',
+                    textOutline: '5px #fafafa'
+                  }
+                }
+              })
+            }
+
+          })
         }
 
         const chartOptions = {
@@ -84,7 +123,8 @@
             ], [
               'year',
               null
-            ]]
+            ]],
+            plotLines: plotLines
           },
           yAxis: [{
             id: 'rating-axis',
