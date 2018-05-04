@@ -62,8 +62,8 @@
 
         // parse the episodes (if we have any) and make plotlines from them
 
-        // Limit number of plotlines for readability
-        if (episodes.length < maximumEpisodePlotlines) {
+        // Limit number of plotlines for readability, and disable them on small screens
+        if (episodes.length < maximumEpisodePlotlines && window.innerWidth >= 1200) {
           episodes.forEach(episode => {
 
             // Don't draw episodes in the future
