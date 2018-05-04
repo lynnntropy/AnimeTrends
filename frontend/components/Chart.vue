@@ -73,7 +73,7 @@
                 color: 'rgba(0, 0, 0, 0.1)',
                 width: 2,
                 dashStyle: 'Dash',
-                zIndex: 1000,
+                zIndex: 1,
                 label: {
                   text: `Ep. ${episode.episode_number}`,
                   rotation: 60,
