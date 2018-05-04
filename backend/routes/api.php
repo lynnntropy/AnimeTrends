@@ -16,4 +16,5 @@ use Illuminate\Http\Request;
 Route::get('/anime', 'ApiController@getAnimeList');
 Route::get('/anime/{anime}', 'ApiController@getAnime');
 Route::get('/anime/{anime}/history', 'ApiController@getSnapshotsForAnime');
+Route::get('/anime/{anime}/episodes', 'ApiController@getEpisodesForAnime');
 Route::get('/stats', 'ApiController@getStats');

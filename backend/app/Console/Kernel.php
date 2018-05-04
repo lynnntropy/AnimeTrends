@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\FetchAllImages;
 use App\Console\Commands\UpdateDatabase;
+use App\Console\Commands\UpdateEpisodesForAllAnime;
 use App\DatabaseUpdateManager;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -18,6 +19,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         UpdateDatabase::class,
         FetchAllImages::class,
+        UpdateEpisodesForAllAnime::class,
     ];
 
     /**

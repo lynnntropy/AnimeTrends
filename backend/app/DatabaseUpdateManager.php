@@ -3,8 +3,9 @@
 namespace App;
 
 use App\Models\Anime;
+use App\Models\Episode;
 use App\Models\Snapshot;
-use App\Services\SeasonalAnimeService;
+use App\Services\MyAnimeListService;
 use Carbon\Carbon;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
@@ -14,65 +15,77 @@ use Jikan\Jikan;
 
 class DatabaseUpdateManager
 {
-    public static function update()
+    /**
+     * @var MyAnimeListService
+     */
+    protected $myAnimeList;
+
+    /**
+     * DatabaseUpdateManager constructor.
+     */
+    public function __construct()
     {
-        $seasonalAnime = SeasonalAnimeService::getSeasonalAnime();
+        $this->myAnimeList = new MyAnimeListService();
+    }
+
+    public function update()
+    {
+        Log::useFiles('php://stdout', 'info');
+
+        $seasonalAnime = $this->myAnimeList->getSeasonalAnime();
 
         // Update the anime table with anime from the seasonal anime list.
 
-        foreach ($seasonalAnime as $item)
+        foreach ($seasonalAnime as $index => $item)
         {
-            if ($item->type == 'TV' and $item->score != 0)
+            Log::info("Processing item " . ($index + 1) . "/" . count($seasonalAnime) . ": " . $item->title);
+
+            $existingAnime = Anime::find($item->id);
+
+            if ($existingAnime == null && $item->score != 0)
             {
-                $existingAnime = Anime::find($item->id);
+                // Add newly added TV anime to the database.
 
-                if ($existingAnime == null)
-                {
-                    // Add newly added TV anime to the database.
-                    $newAnime = new Anime;
-                    $newAnime->id = $item->id;
-                    $newAnime->title = $item->title;
-                    $newAnime->original_image_url = $item->imageUrl;
-                    $newAnime->members = $item->members;
-                    $newAnime->rating = $item->score;
-                    $newAnime->save();
-
-                    self::fetchImage($item->id, $item->imageUrl);
-                }
-                else
-                {
-                    // Check if the image URL has changed in the meantime.
-
-                    if ($existingAnime->original_image_url != $item->imageUrl) {
-
-                        // Fetch the new image.
-
-                        self::fetchImage($item->id, $item->imageUrl);
-
-                        // Update the URL in the database.
-
-                        $existingAnime->original_image_url = $item->imageUrl;
-                        $existingAnime->save();
-                    }
-                }
-            }
-        }
-
-        // Update the snapshots table for all anime that we're currently tracking.
-
-        foreach ($seasonalAnime as $item)
-        {
-            $anime = Anime::find($item->id);
-            if ($anime != null)
-            {
-                $anime->members = $item->members;
-                $anime->rating = $item->score;
-                $anime->save();
+                $item->save();
 
                 $snapshot = new Snapshot;
                 $snapshot->rating = $item->score;
                 $snapshot->members = $item->members;
-                $anime->snapshots()->save($snapshot);
+                $item->snapshots()->save($snapshot);
+
+                $this->fetchImage($item->id, $item->imageUrl);
+                $this->updateEpisodesForAnime($item->id);
+            }
+            else if ($existingAnime)
+            {
+                // Show already exists in the database.
+
+                // Update the score and members, and create a new snapshot
+
+                if ($item->score != 0) {
+                    $existingAnime->members = $item->members;
+                    $existingAnime->rating = $item->rating;
+                    $existingAnime->save();
+
+                    $snapshot = new Snapshot;
+                    $snapshot->rating = $item->rating;
+                    $snapshot->members = $item->members;
+                    $existingAnime->snapshots()->save($snapshot);
+                }
+
+                // Update the episodes
+                $this->updateEpisodesForAnime($item->id);
+
+                // Check if the image URL has changed in the meantime.
+                if ($existingAnime->original_image_url != $item->original_image_url) {
+
+                    // It's changed, fetch the new image.
+                    $this->fetchImage($item->id, $item->original_image_url);
+
+                    // Update the URL in the database.
+                    $existingAnime->original_image_url = $item->original_image_url;
+                    $existingAnime->save();
+                }
             }
         }
 
@@ -104,10 +117,10 @@ class DatabaseUpdateManager
             }
         }
 
-        self::updateRecentlyArchived();
+        $this->updateRecentlyArchived();
     }
 
-    public static function fetchAllImages()
+    public function fetchAllImages()
     {
         Log::useFiles('php://stdout', 'info');
 
@@ -139,7 +152,7 @@ class DatabaseUpdateManager
             Log::info("Fetching image...");
 
             // Fetch the image
-            self::fetchImage($item->id, $imageUrl);
+            $this->fetchImage($item->id, $imageUrl);
 
             // Update the image URL in the database
 
@@ -153,8 +166,9 @@ class DatabaseUpdateManager
     /**
      *  Update recently archived shows.
      *  This method uses Jikan to scrape each show's page individually, rather than using the season page.
+     *  It also triggers an update of the episode data for the show.
      */
-    private static function updateRecentlyArchived()
+    private function updateRecentlyArchived()
     {
         $jikan = new Jikan;
 
@@ -173,12 +187,45 @@ class DatabaseUpdateManager
             $snapshot->rating = $currentData['score'];
             $snapshot->members = $currentData['members'];
             $anime->snapshots()->save($snapshot);
+
+            $this->updateEpisodesForAnime($anime->id);
         }
     }
 
-    private static function fetchImage($animeId, $imageUrl)
+    private function fetchImage($animeId, $imageUrl)
     {
         $fileContents = file_get_contents($imageUrl);
         Storage::disk('public')->put("cover_images/$animeId.jpg", $fileContents);
+    }
+
+    private function updateEpisodesForAnime($animeId)
+    {
+        Log::info("Fetching episodes for anime ID $animeId...");
+
+        $episodes = $this->myAnimeList->getEpisodesForAnime($animeId);
+
+        foreach ($episodes as $episode) {
+            Episode::updateOrCreate(
+                ['anime_id' => $animeId, 'episode_number' => $episode->episode_number],
+                [
+                    'title' => $episode->title,
+                    'title_romaji' => $episode->title_romaji,
+                    'title_japanese' => $episode->title_japanese,
+                    'aired_date' => $episode->aired_date
+                ]
+            );
+        }
+
+        Log::info("Fetched and parsed " . count($episodes) . " episodes.");
+    }
+
+    public function updateEpisodesForAllAnime()
+    {
+        Log::useFiles('php://stdout', 'info');
+
+        $allAnime = Anime::all();
+        foreach($allAnime as $item) {
+            $this->updateEpisodesForAnime($item->id);
+        }
     }
 }

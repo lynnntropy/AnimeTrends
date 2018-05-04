@@ -17,9 +17,9 @@ class CreateEpisodesTable extends Migration
             $table->increments('id');
             $table->integer('anime_id');
             $table->integer('episode_number');
-            $table->string('title');
-            $table->string('title_romaji');
-            $table->string('title_japanese');
+            $table->string('title')->nullable();
+            $table->string('title_romaji')->nullable();
+            $table->string('title_japanese')->nullable();
             $table->date('aired_date');
             $table->timestamps();
 

@@ -36,7 +36,8 @@ class FetchAllImages extends Command
     public function handle()
     {
         $this->info('Fetching images...');
-        DatabaseUpdateManager::fetchAllImages();
+        $manager = new DatabaseUpdateManager;
+        $manager->fetchAllImages();
         $this->info('Fetch successful.');
     }
 }

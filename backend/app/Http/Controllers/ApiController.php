@@ -26,6 +26,11 @@ class ApiController extends Controller
         return $anime->snapshots;
     }
 
+    public function getEpisodesForAnime(Anime $anime)
+    {
+        return $anime->episodes;
+    }
+
     public function getStats()
     {
         $time = Snapshot::orderBy('id', 'desc')->first()->created_at;

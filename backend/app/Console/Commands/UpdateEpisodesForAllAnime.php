@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\DatabaseUpdateManager;
 use Illuminate\Console\Command;
 
-class UpdateDatabase extends Command
+class UpdateEpisodesForAllAnime extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'animetrends:update';
+    protected $signature = 'animetrends:updateallepisodes';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Updates the anime database and saves updated ratings snapshots for all anime.';
+    protected $description = 'Updates episodes for all anime in the database.';
 
     /**
      * Create a new command instance.
@@ -35,9 +35,9 @@ class UpdateDatabase extends Command
      */
     public function handle()
     {
-        $this->info('Running database update...');
+        $this->info('Updating episodes...');
         $manager = new DatabaseUpdateManager;
-        $manager->update();
-        $this->info('Database update successful.');
+        $manager->updateEpisodesForAllAnime();
+        $this->info('Update successful.');
     }
 }

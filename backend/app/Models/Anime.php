@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Anime extends Model
 {
+    protected $guarded = [];
     protected $table = 'anime';
     protected $visible = ['id', 'title', 'members', 'rating', 'archived'];
 
@@ -18,5 +19,12 @@ class Anime extends Model
         return $this
             ->hasMany('App\Models\Snapshot', 'anime_id')
             ->select(['created_at as timestamp', 'rating', 'members']);
+    }
+
+    public function episodes()
+    {
+        return $this
+            ->hasMany('App\Models\Episode', 'anime_id')
+            ->select(['episode_number', 'title', 'title_romaji', 'title_japanese', 'aired_date']);
     }
 }
