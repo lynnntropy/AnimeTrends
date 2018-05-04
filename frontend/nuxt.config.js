@@ -12,8 +12,8 @@ module.exports = {
       { hid: 'description', name: 'description', content: 'See MyAnimeList score charts of various anime on AnimeTrends!' },
       { property: 'og:site_name', content: 'AnimeTrends' },
 
-      { name: "msapplication-TileColor", content: "#ffc40d" },
-      { name: "theme-color", content: "#ffc40d" }
+      { name: "msapplication-TileColor", content: "#03A9F4" },
+      { name: "theme-color", content: "#03A9F4" }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
