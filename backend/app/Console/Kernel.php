@@ -31,7 +31,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            DatabaseUpdateManager::update();
+            $manager = new DatabaseUpdateManager;
+            $manager->update();
         })->twiceDaily();
     }
 
