@@ -170,22 +170,20 @@ class DatabaseUpdateManager
      */
     private function updateRecentlyArchived()
     {
-        $jikan = new Jikan;
-
         $recentlyArchivedAnime = Anime::where('archived', '=', 1)
                             ->whereDate('archived_at', '>=', Carbon::now()->subMonth())
                             ->get();
 
         foreach ($recentlyArchivedAnime as $anime) {
-            $currentData = $jikan->Anime($anime->id)->response;
+            $currentData = $this->myAnimeList->getAnime($anime->id);
 
-            $anime->rating = $currentData['score'];
-            $anime->members = $currentData['members'];
+            $anime->rating = $currentData->rating;
+            $anime->members = $currentData->members;
             $anime->save();
 
             $snapshot = new Snapshot;
-            $snapshot->rating = $currentData['score'];
-            $snapshot->members = $currentData['members'];
+            $snapshot->rating = $currentData->rating;
+            $snapshot->members = $currentData->members;
             $anime->snapshots()->save($snapshot);
 
             $this->updateEpisodesForAnime($anime->id);

@@ -36,12 +36,28 @@ class MyAnimeListService
         $page = $this->goutte->request('GET', "https://myanimelist.net/anime/$animeId");
 
         $title = $page->filter('h1.h1 > span')->first()->text();
-        $titleEnglish = trim(str_replace('English:', '', $page->filterXPath("//div[@class='spaceit_pad' and ./*[contains(text(), 'English')]]")->first()->text()));
-        $titleJapanese = trim(str_replace('Japanese:', '', $page->filterXPath("//div[@class='spaceit_pad' and ./*[contains(text(), 'Japanese')]]")->first()->text()));
-        $synonyms = trim(str_replace('Synonyms:', '', $page->filterXPath("//div[@class='spaceit_pad' and ./*[contains(text(), 'Synonyms')]]")->first()->text()));
+
+        try {
+            $titleEnglish = trim(str_replace('English:', '', $page->filterXPath("//div[@class='spaceit_pad' and ./*[contains(text(), 'English')]]")->first()->text()));
+        } catch (\Exception $e) {
+            $titleEnglish = null;
+        }
+
+        try {
+            $titleJapanese = trim(str_replace('Japanese:', '', $page->filterXPath("//div[@class='spaceit_pad' and ./*[contains(text(), 'Japanese')]]")->first()->text()));
+        } catch (\Exception $e) {
+            $titleJapanese = null;
+        }
+
+        try {
+            $synonyms = trim(str_replace('Synonyms:', '', $page->filterXPath("//div[@class='spaceit_pad' and ./*[contains(text(), 'Synonyms')]]")->first()->text()));
+        } catch (\Exception $e) {
+            $synonyms = null;
+        }
+
         $imageUrl = $page->filter('img.ac[itemprop=image]')->first()->attr('src');
         $score =  floatval($page->filter('span[itemprop=ratingValue]')->first()->text());
-        $members = trim(str_replace('Members:', '', $page->filterXPath("//div[@class='spaceit' and ./*[contains(text(), 'Members')]]")->first()->text()));
+        $members = trim(str_replace(['Members:', ','], '', $page->filterXPath("//div[@class='spaceit' and ./*[contains(text(), 'Members')]]")->first()->text()));
 
         return new Anime([
             'id' => $animeId,
@@ -143,7 +159,6 @@ class MyAnimeListService
                     'rating' => $score,
                     'members' => $members
                 ]);
-
             }
         });
 
