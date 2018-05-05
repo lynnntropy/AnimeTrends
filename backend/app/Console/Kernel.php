@@ -6,6 +6,7 @@ use App\Console\Commands\FetchAllImages;
 use App\Console\Commands\ScrapeAnimeStats;
 use App\Console\Commands\UpdateDatabase;
 use App\Console\Commands\UpdateEpisodesForAllAnime;
+use App\Console\Commands\UpdateTitles;
 use App\DatabaseUpdateManager;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -21,7 +22,8 @@ class Kernel extends ConsoleKernel
         UpdateDatabase::class,
         FetchAllImages::class,
         UpdateEpisodesForAllAnime::class,
-        ScrapeAnimeStats::class
+        ScrapeAnimeStats::class,
+        UpdateTitles::class
     ];
 
     /**

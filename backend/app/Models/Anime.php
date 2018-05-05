@@ -10,10 +10,21 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Anime extends Model
 {
+    public $incrementing = false;
+
     protected $guarded = [];
     protected $table = 'anime';
-    protected $visible = ['id', 'title', 'members', 'rating', 'archived'];
-    public $incrementing = false;
+    protected $visible = [
+        'id',
+        'title',
+        'title_english',
+        'title_japanese',
+        'synonyms',
+        'members',
+        'rating',
+        'archived'
+    ];
+
 
     public function snapshots()
     {

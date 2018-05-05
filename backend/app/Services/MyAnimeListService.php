@@ -56,7 +56,7 @@ class MyAnimeListService
         }
 
         $imageUrl = $page->filter('img.ac[itemprop=image]')->first()->attr('src');
-        $score =  floatval($page->filter('span[itemprop=ratingValue]')->first()->text());
+        $score =  floatval($page->filterXPath("//div[span[contains(text(), 'Score:')]]/span[2]")->first()->text());
         $members = trim(str_replace(['Members:', ','], '', $page->filterXPath("//div[@class='spaceit' and ./*[contains(text(), 'Members')]]")->first()->text()));
 
         return new Anime([

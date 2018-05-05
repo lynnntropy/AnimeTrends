@@ -291,4 +291,26 @@ class DatabaseUpdateManager
             }
         }
     }
+
+    public function updateTitles()
+    {
+        $animeToUpdate = Anime::all();
+        foreach ($animeToUpdate as $index => $anime) {
+
+            echo 'Fetching anime ' . ($index + 1) . '/' . count($animeToUpdate) . ': ' . $anime->title . "...\n";
+
+                try {
+                    $animeData = $this->myAnimeList->getAnime($anime->id);
+                } catch (\Exception $e) {
+                    echo "Failed: $e \n";
+                    continue;
+                }
+
+            $anime->title = $animeData->title;
+            $anime->title_english = $animeData->title_english;
+            $anime->title_japanese = $animeData->title_japanese;
+            $anime->synonyms = $animeData->synonyms;
+            $anime->save();
+        }
+    }
 }

@@ -7,7 +7,10 @@
     </section>
     <section class="details">
       <a :href="`https://myanimelist.net/anime/${anime.id}`" target="_blank" rel="noopener">
-        <h1>{{ anime.title }}</h1>
+        <h1>
+          {{ anime.title }}
+          <span class="english-title" v-if="anime.title_english && anime.title_english !== anime.title">({{ anime.title_english }})</span>
+        </h1>
       </a>
       <p>MyAnimeList members: <span class="members">{{ anime.members | suffixedNumber(1) }}</span></p>
       <p>Current score: <ColoredRating :rating="anime.rating" /></p>
@@ -70,6 +73,11 @@
         font-size: 1.1rem;
         color: #333;
         display: inline-block;
+        line-height: 1.25;
+
+        .english-title {
+          color: #aaa;
+        }
 
         @include breakpoint-md{
           font-size: 1.5rem;
