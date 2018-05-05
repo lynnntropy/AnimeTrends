@@ -49,11 +49,11 @@ class DatabaseUpdateManager
                 $item->save();
 
                 $snapshot = new Snapshot;
-                $snapshot->rating = $item->score;
+                $snapshot->rating = $item->rating;
                 $snapshot->members = $item->members;
                 $item->snapshots()->save($snapshot);
 
-                $this->fetchImage($item->id, $item->imageUrl);
+                $this->fetchImage($item->id, $item->original_image_url);
                 $this->updateEpisodesForAnime($item->id);
             }
             else if ($existingAnime)
