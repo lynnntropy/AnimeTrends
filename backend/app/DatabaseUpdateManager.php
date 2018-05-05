@@ -157,7 +157,7 @@ class DatabaseUpdateManager
                     break;
                 } else {
                     Log::warning("No suitable <img> found on page! retrying...");
-                    usleep(10 * 1000 * 1000);
+                    usleep(1 * 1000 * 1000);
 //                    continue;
                 }
             }
