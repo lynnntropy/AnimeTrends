@@ -13,6 +13,7 @@ class Anime extends Model
     protected $guarded = [];
     protected $table = 'anime';
     protected $visible = ['id', 'title', 'members', 'rating', 'archived'];
+    public $incrementing = false;
 
     public function snapshots()
     {

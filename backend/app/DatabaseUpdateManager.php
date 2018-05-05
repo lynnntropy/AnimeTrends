@@ -5,13 +5,13 @@ namespace App;
 use App\Models\Anime;
 use App\Models\Episode;
 use App\Models\Snapshot;
+use App\Services\AnimeStatsService;
 use App\Services\MyAnimeListService;
 use Carbon\Carbon;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jikan\Jikan;
 
 class DatabaseUpdateManager
 {
@@ -21,11 +21,17 @@ class DatabaseUpdateManager
     protected $myAnimeList;
 
     /**
+     * @var AnimeStatsService
+     */
+    protected $animeStats;
+
+    /**
      * DatabaseUpdateManager constructor.
      */
     public function __construct()
     {
         $this->myAnimeList = new MyAnimeListService();
+        $this->animeStats = new AnimeStatsService();
     }
 
     public function update()
@@ -170,21 +176,34 @@ class DatabaseUpdateManager
      */
     private function updateRecentlyArchived()
     {
+        $cutoffTime = Carbon::now()->subMonth();
+
         $recentlyArchivedAnime = Anime::where('archived', '=', 1)
-                            ->whereDate('archived_at', '>=', Carbon::now()->subMonth())
+                            ->whereDate('archived_at', '>=', $cutoffTime)
                             ->get();
 
         foreach ($recentlyArchivedAnime as $anime) {
-            $currentData = $this->myAnimeList->getAnime($anime->id);
 
-            $anime->rating = $currentData->rating;
-            $anime->members = $currentData->members;
-            $anime->save();
+            // Make sure that the gap between the last snapshot and now
+            // is still inside the cutoff time.
 
-            $snapshot = new Snapshot;
-            $snapshot->rating = $currentData->rating;
-            $snapshot->members = $currentData->members;
-            $anime->snapshots()->save($snapshot);
+            // This prevents from accidentally creating huge gaps in the graph for shows
+            // that were recently imported from an external source.
+
+            $lastSnapshotTime = $anime->snapshots()->orderBy('id', 'desc')->first()->created_at;
+            if ($lastSnapshotTime >= $cutoffTime) {
+
+                $currentData = $this->myAnimeList->getAnime($anime->id);
+
+                $anime->rating = $currentData->rating;
+                $anime->members = $currentData->members;
+                $anime->save();
+
+                $snapshot = new Snapshot;
+                $snapshot->rating = $currentData->rating;
+                $snapshot->members = $currentData->members;
+                $anime->snapshots()->save($snapshot);
+            }
 
             $this->updateEpisodesForAnime($anime->id);
         }
@@ -203,15 +222,19 @@ class DatabaseUpdateManager
         $episodes = $this->myAnimeList->getEpisodesForAnime($animeId);
 
         foreach ($episodes as $episode) {
-            Episode::updateOrCreate(
-                ['anime_id' => $animeId, 'episode_number' => $episode->episode_number],
-                [
-                    'title' => $episode->title,
-                    'title_romaji' => $episode->title_romaji,
-                    'title_japanese' => $episode->title_japanese,
-                    'aired_date' => $episode->aired_date
-                ]
-            );
+            try {
+                Episode::updateOrCreate(
+                    ['anime_id' => $animeId, 'episode_number' => $episode->episode_number],
+                    [
+                        'title' => $episode->title,
+                        'title_romaji' => $episode->title_romaji,
+                        'title_japanese' => $episode->title_japanese,
+                        'aired_date' => $episode->aired_date
+                    ]
+                );
+            } catch (\Exception $e) {
+                echo $e;
+            }
         }
 
         Log::info("Fetched and parsed " . count($episodes) . " episodes.");
@@ -224,6 +247,48 @@ class DatabaseUpdateManager
         $allAnime = Anime::all();
         foreach($allAnime as $item) {
             $this->updateEpisodesForAnime($item->id);
+        }
+    }
+
+    public function scrapeAnimeStats()
+    {
+        $allAnime = $this->animeStats->getAllAnime();
+
+        foreach($allAnime as $index => $item) {
+
+            echo 'Processing anime ' . ($index + 1) . '/' . count($allAnime) . ': ' . $item->name . "\n";
+
+            if (isset($item->eps)) {
+
+                $lastEpisode = $item->eps[count($item->eps) - 1];
+
+                $existingAnime = Anime::find($item->malId);
+
+                if ($existingAnime == null) {
+
+                    $newAnime = new Anime([
+                        'id' => $item->malId,
+                        'title' => $item->name,
+                        'rating' => $lastEpisode->malRating,
+                        'members' => $lastEpisode->malMembers,
+                    ]);
+
+                    $newAnime->save();
+
+                    foreach ($item->eps as $episode) {
+                        $snapshot = new Snapshot;
+                        $snapshot->rating = $episode->malRating;
+                        $snapshot->members = $episode->malMembers;
+                        $snapshot->created_at = $episode->created_at;
+                        $snapshot->updated_at = $episode->created_at;
+                        $newAnime->snapshots()->save($snapshot);
+                    }
+
+                }
+
+            } else {
+                echo "Skipping show with no episodes.\n";
+            }
         }
     }
 }

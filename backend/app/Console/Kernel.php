@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\FetchAllImages;
+use App\Console\Commands\ScrapeAnimeStats;
 use App\Console\Commands\UpdateDatabase;
 use App\Console\Commands\UpdateEpisodesForAllAnime;
 use App\DatabaseUpdateManager;
@@ -20,6 +21,7 @@ class Kernel extends ConsoleKernel
         UpdateDatabase::class,
         FetchAllImages::class,
         UpdateEpisodesForAllAnime::class,
+        ScrapeAnimeStats::class
     ];
 
     /**
