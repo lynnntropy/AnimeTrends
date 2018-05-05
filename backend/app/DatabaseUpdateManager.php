@@ -42,7 +42,7 @@ class DatabaseUpdateManager
 
             $existingAnime = Anime::find($item->id);
 
-            if ($existingAnime == null && $item->score != 0)
+            if ($existingAnime == null && $item->rating != 0)
             {
                 // Add newly added TV anime to the database.
 
