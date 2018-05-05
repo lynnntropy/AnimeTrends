@@ -62,7 +62,7 @@ class DatabaseUpdateManager
 
                 // Update the score and members, and create a new snapshot
 
-                if ($item->score != 0) {
+                if ($item->rating != 0) {
                     $existingAnime->members = $item->members;
                     $existingAnime->rating = $item->rating;
                     $existingAnime->save();
