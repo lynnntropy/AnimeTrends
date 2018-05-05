@@ -9,27 +9,30 @@
       <input class="search" type="text" placeholder="Search..." v-model="filter">
       <div class="clear-button" v-if="filter" @click="filter = ''">&times;</div>
     </div>
-    <div class="tabs">
-      <div class="tab" :class="{ active: currentTab === 'current' }" @click="currentTab = 'current'">
+    <div class="tabs" :disabled="filter !== ''">
+      <div class="tab" :class="{ active: currentTab === 'current' }" @click="(!filter) ? currentTab = 'current' : null">
         Current <span class="count">({{ currentCount }})</span>
       </div>
-      <div class="tab" :class="{ active: currentTab === 'archived' }" @click="currentTab = 'archived'">
+      <div class="tab" :class="{ active: currentTab === 'archived' }" @click="(!filter) ? currentTab = 'archived' : null">
         Archived <span class="count">({{ archivedCount }})</span>
       </div>
     </div>
     <transition mode="out-in" name="sidebar-transition">
       <div class="list-container" v-if="animeList.length > 0" key="list">
         <div class="anime-list">
-          <nuxt-link :to="`/anime/${item.id}/${$options.filters.slugify(item.title)}`" v-for="item in filteredItems" :key="item.id">
-            <div class="item" >
-              <div class="title">{{ item.title }}</div>
-              <div class="details">
-                <ColoredRating :rating="item.rating" />
-                &middot;
-                {{ item.members | suffixedNumber(1) }} members
-              </div>
+          <div v-if="filter">
+            <div v-if="filteredCurrentItems.length">
+              <div class="list-header">CURRENT</div>
+              <ListItem :item="item" v-for="item in filteredCurrentItems" :key="item.id" />
             </div>
-          </nuxt-link>
+            <div v-if="filteredArchivedItems.length">
+              <div class="list-header">ARCHIVED</div>
+              <ListItem :item="item" v-for="item in filteredArchivedItems" :key="item.id" />
+            </div>
+          </div>
+          <div v-else>
+            <ListItem :item="item" v-for="item in tabItems" :key="item.id" />
+          </div>
         </div>
       </div>
       <div class="loader-container" v-else key="loader">
@@ -42,13 +45,13 @@
 <script>
   import axios from 'axios'
   import SyncLoader from 'vue-spinner/src/SyncLoader.vue'
-  import ColoredRating from '~/components/ColoredRating.vue'
+  import ListItem from '~/components/ListItem.vue'
 
   export default {
 
     components: {
       SyncLoader,
-      ColoredRating
+      ListItem
     },
 
     data () {
@@ -65,17 +68,36 @@
     },
 
     computed: {
+
+      currentItems () {
+        return this.animeList.filter(item => item.archived === 0)
+      },
+
+      archivedItems () {
+        return this.animeList.filter(item => item.archived === 1)
+      },
+
+      tabItems () {
+        return this.currentTab === 'archived'
+          ? this.archivedItems
+          : this.currentItems
+      },
+
       filteredItems () {
         let filteredItems = this.animeList
-
-        this.currentTab === 'archived'
-          ? filteredItems = filteredItems.filter(item => item.archived === 1)
-          : filteredItems = filteredItems.filter(item => item.archived === 0)
 
         if (this.filter)
           filteredItems = filteredItems.filter(item => item.title.toLowerCase().includes(this.filter.toLowerCase()))
 
         return filteredItems
+      },
+
+      filteredCurrentItems () {
+        return this.filteredItems.filter(item => item.archived === 0)
+      },
+
+      filteredArchivedItems () {
+        return this.filteredItems.filter(item => item.archived === 1)
       },
 
       currentCount () {
@@ -178,6 +200,29 @@
       flex-direction: row;
       flex-shrink: 0;
 
+      &[disabled] {
+        opacity: 0.25;
+        cursor: not-allowed;
+
+        .tab {
+          cursor: inherit;
+        }
+      }
+
+      &:not([disabled]) {
+        .tab {
+          &:hover {
+            opacity: 0.7;
+            border-bottom-color: rgba(white, 0.1);
+          }
+
+          &.active {
+            opacity: 1;
+            border-bottom-color: rgba(white, 1);
+          }
+        }
+      }
+
       .tab {
         flex: 1;
         padding: 0.5rem 0;
@@ -192,16 +237,6 @@
 
         .count {
           color: #777;
-        }
-
-        &:hover {
-          opacity: 0.7;
-          border-bottom-color: rgba(white, 0.1);
-        }
-
-        &.active {
-          opacity: 1;
-          border-bottom-color: rgba(white, 1);
         }
       }
     }
@@ -229,35 +264,11 @@
       .anime-list {
         padding: 0.5rem 0;
 
-        .nuxt-link-active {
-          .item {
-            border-left-color: #fff;
-          }
-        }
-
-        .item {
-          padding: 0.5rem 0.5rem;
-          border-left: 3px solid rgba(white, 0);
-
-          transition: background-color .1s ease, border-left-color .2s ease;
-
-          .title {
-            color: #fff;
-            font-size: 0.85rem;
-
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-          }
-
-          .details {
-            font-size: 0.75rem;
-            color: #777;
-          }
-
-          &:hover {
-            background-color: rgba(white, 0.05);
-          }
+        .list-header {
+          padding: 1rem 0.5rem 0.5rem;
+          text-transform: uppercase;
+          color: rgba(white, 0.35);
+          font-weight: 600;
         }
       }
     }
