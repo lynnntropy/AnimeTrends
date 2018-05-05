@@ -5,7 +5,7 @@
         AnimeTrends
       </div>
     </nuxt-link>
-    <div class="search-container">
+    <div class="search-container" @keydown.esc="filter = ''">
       <input class="search" type="text" placeholder="Search..." v-model="filter">
       <div class="clear-button" v-if="filter" @click="filter = ''">&times;</div>
     </div>
