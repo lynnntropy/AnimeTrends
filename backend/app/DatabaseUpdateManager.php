@@ -141,18 +141,25 @@ class DatabaseUpdateManager
             Log::info("Processing anime: " . $item->title . " (ID " . $item->id . ")");
             Log::info("Fetching page...");
 
-            // Fetch the page into a node
-            $crawler = $client->request('GET', 'https://myanimelist.net/anime/' . $item->id);
 
-            // Find the image URL
-            // (potentially unreliable since MAL's HTML is a crazy mess
-            // of tables and no CSS classes to be found anywhere)
 
-            if ($crawler->filter('img[src*="myanimelist.cdn-dena.com/images/anime"]')->count() > 0) {
-                $imageUrl = $crawler->filter('img[src*="myanimelist.cdn-dena.com/images/anime"]')->first()->attr('src');
-            } else {
-                Log::warning("No suitable <img> found on page!");
-                continue;
+            while (true) {
+
+                // Fetch the page into a node
+                $crawler = $client->request('GET', 'https://myanimelist.net/anime/' . $item->id);
+
+                // Find the image URL
+                // (potentially unreliable since MAL's HTML is a crazy mess
+                // of tables and no CSS classes to be found anywhere)
+
+                if ($crawler->filter('img[src*="myanimelist.cdn-dena.com/images/anime"]')->count() > 0) {
+                    $imageUrl = $crawler->filter('img[src*="myanimelist.cdn-dena.com/images/anime"]')->first()->attr('src');
+                    break;
+                } else {
+                    Log::warning("No suitable <img> found on page! retrying...");
+                    usleep(10 * 1000 * 1000);
+//                    continue;
+                }
             }
 
             Log::info("Fetching image...");
