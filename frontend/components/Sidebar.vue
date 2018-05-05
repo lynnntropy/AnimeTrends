@@ -5,7 +5,10 @@
         AnimeTrends
       </div>
     </nuxt-link>
-    <input class="search" type="text" placeholder="Search..." v-model="filter">
+    <div class="search-container">
+      <input class="search" type="text" placeholder="Search..." v-model="filter">
+      <div class="clear-button" v-if="filter" @click="filter = ''">&times;</div>
+    </div>
     <div class="tabs">
       <div class="tab" :class="{ active: currentTab === 'current' }" @click="currentTab = 'current'">
         Current <span class="count">({{ currentCount }})</span>
@@ -134,25 +137,40 @@
       }
     }
 
-    .search {
+    .search-container {
       align-self: stretch;
       margin: 1rem 1.5rem;
-      padding: 0.5rem 0.75rem;
-      font-size: 1rem;
+      position: relative;
 
-      background: none;
-      border: none;
-      outline: none;
-      color: #fff;
+      .search {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
 
-      border-bottom: 1px solid rgba(white, 0.1);
+        background: none;
+        border: none;
+        outline: none;
+        color: #fff;
 
-      transition: border-bottom-color 0.3s ease;
+        border-bottom: 1px solid rgba(white, 0.1);
 
-      &:focus {
-        border-bottom-color: rgba(white, 0.3);
+        transition: border-bottom-color 0.3s ease;
+
+        &:focus {
+          border-bottom-color: rgba(white, 0.3);
+        }
+      }
+
+      .clear-button {
+        position: absolute;
+        right: 0.75rem;
+        top: -0.4rem;
+        font-size: 2rem;
+        cursor: pointer;
+        color: rgba(white, 0.35);
       }
     }
+
 
     .tabs {
       align-self: stretch;
