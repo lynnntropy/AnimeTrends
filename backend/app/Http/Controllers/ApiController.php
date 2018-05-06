@@ -32,6 +32,19 @@ class ApiController extends Controller
             $query->orderBy('members', 'desc');
         }
 
+        if ($request->offset) {
+            $query->offset($request->offset);
+        }
+
+        if ($request->limit) {
+            $query->limit($request->limit);
+        } else if ($request->offset) {
+            # Necessary because OFFSET requires a LIMIT.
+            # This is the 'official' solution for MySQL.
+            # https://dev.mysql.com/doc/refman/8.0/en/select.html
+            $query->limit(PHP_INT_MAX);
+        }
+
         return $query->get();
     }
 
