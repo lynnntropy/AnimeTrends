@@ -9,33 +9,46 @@
       <input class="search" type="text" placeholder="Search..." v-model="filter">
       <div class="clear-button" v-if="filter" @click="filter = ''">&times;</div>
     </div>
-    <div class="tabs" :disabled="filter !== ''">
-      <div class="tab" :class="{ active: currentTab === 'current' }" @click="(!filter) ? currentTab = 'current' : null">
-        Current <span class="count">({{ currentCount }})</span>
+    <div class="tabs" :disabled="filterActive">
+      <div class="tab" :class="{ active: currentTab === 'current' }" @click="(!filterActive) ? currentTab = 'current' : null">
+        Current <span class="count">({{ counts.current }})</span>
       </div>
-      <div class="tab" :class="{ active: currentTab === 'archived' }" @click="(!filter) ? currentTab = 'archived' : null">
-        Archived <span class="count">({{ archivedCount }})</span>
+      <div class="tab" :class="{ active: currentTab === 'archived' }" @click="(!filterActive) ? currentTab = 'archived' : null">
+        Archived <span class="count">({{ counts.archived }})</span>
       </div>
     </div>
     <transition mode="out-in" name="sidebar-transition">
-      <div class="list-container" v-if="animeList.length > 0" key="list">
+      <div v-if="filterActive && !filteredLoading" class="list-container" key="filteredList">
         <div class="anime-list">
-          <div v-if="filter">
-            <div v-if="filteredCurrentItems.length">
-              <div class="list-header">CURRENT</div>
-              <ListItem :item="item" v-for="item in filteredCurrentItems" :key="item.id" />
-            </div>
-            <div v-if="filteredArchivedItems.length">
-              <div class="list-header">ARCHIVED</div>
-              <ListItem :item="item" v-for="item in filteredArchivedItems" :key="item.id" />
-            </div>
+          <div v-if="filteredCurrentItems.length">
+            <div class="list-header">CURRENT</div>
+            <ListItem :item="item" v-for="item in filteredCurrentItems" :key="item.id" />
           </div>
-          <div v-else>
-            <ListItem :item="item" v-for="item in tabItems" :key="item.id" />
+          <div v-if="filteredArchivedItems.length">
+            <div class="list-header">ARCHIVED</div>
+            <ListItem :item="item" v-for="item in filteredArchivedItems" :key="item.id" />
           </div>
         </div>
       </div>
-      <div class="loader-container" v-else key="loader">
+      <div v-else-if="!filterActive && anime.current.length && currentTab === 'current'" class="list-container" key="currentList" ref="currentContainer">
+        <transition-group name="anime-list" tag="p">
+          <ListItem class="anime-list-item" :item="item" v-for="item in anime.current" :key="item.id" />
+        </transition-group>
+        <mugen-scroll :style="{ opacity: anime.current.length < counts.current ? 1 : 0 }"
+                      class="infinite-scroll" :handler="fetchMoreCurrent" :should-handle="!infiniteScrollLoading" scroll-container="currentContainer">
+          <SyncLoader color="rgba(255, 255, 255, 0.25)" size="10px" />
+        </mugen-scroll>
+      </div>
+      <div v-else-if="!filterActive && anime.archived.length && currentTab === 'archived'" class="list-container" key="archivedList" ref="archivedContainer">
+        <transition-group name="anime-list" tag="p">
+          <ListItem class="anime-list-item" :item="item" v-for="item in anime.archived" :key="item.id" />
+        </transition-group>
+        <mugen-scroll :style="{ opacity: anime.archived.length < counts.archived ? 1 : 0 }"
+                      class="infinite-scroll" :handler="fetchMoreArchived" :should-handle="!infiniteScrollLoading" scroll-container="archivedContainer">
+          <SyncLoader color="rgba(255, 255, 255, 0.25)" size="10px" />
+        </mugen-scroll>
+      </div>
+      <div v-else class="loader-container" key="loader">
         <SyncLoader color="rgba(255, 255, 255, 0.25)" size="10px" />
       </div>
     </transition>
@@ -44,69 +57,122 @@
 
 <script>
   import axios from 'axios'
+  import MugenScroll from 'vue-mugen-scroll'
   import SyncLoader from 'vue-spinner/src/SyncLoader.vue'
   import ListItem from '~/components/ListItem.vue'
+
+  const infiniteScrollChunkSize = 25
+  let axiosCancelTokenSource = axios.CancelToken.source()
 
   export default {
 
     components: {
+      MugenScroll,
       SyncLoader,
       ListItem
     },
 
     data () {
       return {
-        animeList: [],
+        anime: {
+          current: [],
+          archived: [],
+          filtered: []
+        },
+        counts: {
+
+        },
         currentTab: 'current',
-        filter: ''
+        filter: '',
+        filteredLoading: false,
+        infiniteScrollLoading: false
       }
     },
 
-    async mounted () {
-      const { data } = await axios.get('/anime')
-      this.animeList = data
+    mounted () {
+      axios.get('/anime', { params: { archived: 0, limit: infiniteScrollChunkSize }}).then(({ data }) => {
+        this.anime.current = data
+      })
+
+      axios.get('/anime', { params: { archived: 1, limit: infiniteScrollChunkSize }}).then(({ data }) => {
+        this.anime.archived = data
+      })
+
+      axios.get('/counts').then(({ data }) => {
+        this.counts = data
+      })
+    },
+
+    watch: {
+      filter: function (val) {
+        if (this.filteredLoading) {
+          axiosCancelTokenSource.cancel()
+        }
+
+        if (this.filterActive) {
+
+          this.filteredLoading = true
+          axiosCancelTokenSource = axios.CancelToken.source()
+
+          axios.get('/anime', {
+            params: { q: val },
+            cancelToken: axiosCancelTokenSource.token
+          })
+          .then(response => {
+            this.anime.filtered = response.data
+            this.filteredLoading = false
+          })
+          .catch(() => {})
+        }
+      }
+    },
+
+    methods: {
+
+      fetchMoreArchived () {
+        this.infiniteScrollLoading = true
+        axios.get('/anime', {
+          params: {
+            archived: 1,
+            offset: this.anime.archived.length,
+            limit: infiniteScrollChunkSize
+          }
+        })
+        .then(({ data }) => {
+          this.infiniteScrollLoading = false
+          this.anime.archived.push(...data)
+        })
+      },
+
+      fetchMoreCurrent () {
+        this.infiniteScrollLoading = true
+        axios.get('/anime', {
+          params: {
+            archived: 0,
+            offset: this.anime.current.length,
+            limit: infiniteScrollChunkSize
+          }
+        })
+        .then(({ data }) => {
+          this.infiniteScrollLoading = false
+          this.anime.current.push(...data)
+        })
+      }
+
     },
 
     computed: {
-
-      currentItems () {
-        return this.animeList.filter(item => item.archived === 0)
-      },
-
-      archivedItems () {
-        return this.animeList.filter(item => item.archived === 1)
-      },
-
-      tabItems () {
-        return this.currentTab === 'archived'
-          ? this.archivedItems
-          : this.currentItems
-      },
-
-      filteredItems () {
-        let filteredItems = this.animeList
-
-        if (this.filter)
-          filteredItems = filteredItems.filter(item => item.title.toLowerCase().includes(this.filter.toLowerCase()))
-
-        return filteredItems
+      filterActive () {
+        return (this.filter.length >= 2)
       },
 
       filteredCurrentItems () {
-        return this.filteredItems.filter(item => item.archived === 0)
+        return this.anime.filtered.filter(item => item.archived === 0)
       },
 
       filteredArchivedItems () {
-        return this.filteredItems.filter(item => item.archived === 1)
+        return this.anime.filtered.filter(item => item.archived === 1)
       },
-
-      currentCount () {
-        return this.animeList.filter(item => item.archived === 0).length
-      },
-
-      archivedCount () {
-        return this.animeList.filter(item => item.archived === 1).length
-      }
     }
   }
 </script>
@@ -116,10 +182,26 @@
   @import '../scss/main';
 
   .sidebar-transition-enter-active, .sidebar-transition-leave-active {
-    transition: opacity .15s;
+    transition: opacity .15s, transform .15s;
   }
   .sidebar-transition-enter, .sidebar-transition-leave-to {
     opacity: 0;
+    transform: translateY(0.35rem);
+  }
+
+  .anime-list-item {
+    display: inline-block;
+    width: 100%;
+    margin-right: 10px;
+  }
+
+  .anime-list-enter-active, .anime-list-leave-active, .anime-list-item {
+    transition: all 0.25s;
+  }
+
+  .anime-list-enter, .anime-list-leave-to {
+    opacity: 0;
+    transform: translateY(20px);
   }
 
   ::-webkit-scrollbar {
@@ -138,14 +220,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
 
     max-width: 100vw;
 
     @include breakpoint-md {
       max-height: 100vh;
     }
-
-
 
     .header {
       margin: 1rem;
@@ -255,6 +336,7 @@
     .list-container {
       align-self: stretch;
       flex: 1 1 auto;
+      overflow-x: hidden;
 
       @include breakpoint-md {
         height: 100%;
@@ -270,6 +352,11 @@
           color: rgba(white, 0.35);
           font-weight: 600;
         }
+      }
+
+      .infinite-scroll {
+        text-align: center;
+        padding: 1.5rem 0 5rem 0;
       }
     }
   }

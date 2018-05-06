@@ -22,8 +22,8 @@ class ApiController extends Controller
             });
         }
 
-        if ($request->archived) {
-            $query->where('archived', '=', 1);
+        if ($request->has('archived')) {
+            $query->where('archived', '=', $request->archived);
         }
 
         if ($request->sortBy) {
@@ -46,6 +46,14 @@ class ApiController extends Controller
         }
 
         return $query->get();
+    }
+
+    public function getAnimeCounts ()
+    {
+        return [
+            'current' => Anime::where('archived', '=', 0)->count(),
+            'archived' => Anime::where('archived', '=', 1)->count(),
+        ];
     }
 
     public function getAnime(Anime $anime)
