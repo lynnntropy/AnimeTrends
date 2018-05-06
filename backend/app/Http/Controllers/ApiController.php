@@ -4,13 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\Anime;
 use App\Models\Snapshot;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class ApiController extends Controller
 {
-    public function getAnimeList()
+    public function getAnimeList(Request $request)
     {
-        return Anime::orderBy('members', 'desc')->get();
+        $query = Anime::query();
+
+        if ($request->q) {
+            $query->where(function ($query) use ($request) {
+                $query->where('title', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('title_english', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('title_japanese', 'LIKE', '%'.$request->q.'%')
+                    ->orWhere('synonyms', 'LIKE', '%'.$request->q.'%');
+            });
+        }
+
+        if ($request->archived) {
+            $query->where('archived', '=', 1);
+        }
+
+        if ($request->sortBy) {
+            $query->orderBy($request->sortBy, $request->input('sortOrder', 'asc'));
+        } else {
+            $query->orderBy('members', 'desc');
+        }
+
+        return $query->get();
     }
 
     public function getAnime(Anime $anime)
