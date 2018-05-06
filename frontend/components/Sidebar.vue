@@ -19,7 +19,7 @@
     </div>
     <transition mode="out-in" name="sidebar-transition">
       <div v-if="filterActive && !filteredLoading" class="list-container" key="filteredList">
-        <div class="anime-list">
+        <div class="anime-list" v-if="this.anime.filtered.length">
           <div v-if="filteredCurrentItems.length">
             <div class="list-header">CURRENT</div>
             <ListItem :item="item" v-for="item in filteredCurrentItems" :key="item.id" />
@@ -28,6 +28,9 @@
             <div class="list-header">ARCHIVED</div>
             <ListItem :item="item" v-for="item in filteredArchivedItems" :key="item.id" />
           </div>
+        </div>
+        <div v-else class="no-results-message">
+          No results, sorry!
         </div>
       </div>
       <div v-else-if="!filterActive && anime.current.length && currentTab === 'current'" class="list-container" key="currentList" ref="currentContainer">
@@ -211,6 +214,12 @@
 
   ::-webkit-scrollbar-thumb {
     background: rgba(white, 0.35);
+  }
+
+  .no-results-message {
+    text-align: center;
+    padding: 1rem;
+    color: #777;
   }
 
   .sidebar {
