@@ -48,16 +48,16 @@
     padding: 0.5rem 0.75rem;
     font-size: 1rem;
 
-    background: none;
     outline: none;
     color: #777;
 
-    border-bottom: 1px solid rgba(white, 0.1);
+    background-color: rgba(black, 0.125);
+    border-radius: 5px;
 
     cursor: pointer;
 
     .current-sort {
-      color: #fff;
+      color: #ddd;
     }
 
     .dropdown {
