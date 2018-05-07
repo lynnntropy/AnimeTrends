@@ -12,8 +12,8 @@
           <span class="english-title" v-if="anime.title_english && anime.title_english !== anime.title">({{ anime.title_english }})</span>
         </h1>
       </a>
-      <p>MyAnimeList members: <span class="members">{{ anime.members | suffixedNumber(1) }}</span></p>
-      <p>Current score: <ColoredRating :rating="anime.rating" /></p>
+      <p>Members (last observed): <span class="members">{{ anime.members | suffixedNumber(1) }}</span></p>
+      <p>Score (last observed): <ColoredRating :rating="anime.rating" /></p>
     </section>
   </section>
 </template>
