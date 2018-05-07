@@ -105,32 +105,32 @@
 
         sortTypes: [
           {
-            name: 'Members (descending)',
+            name: 'Members (highest first)',
             property: 'members',
             order: 'desc'
           },
           {
-            name: 'Members (ascending)',
+            name: 'Members (lowest first)',
             property: 'members',
             order: 'asc'
           },
           {
-            name: 'Score (descending)',
+            name: 'Score (highest first)',
             property: 'rating',
             order: 'desc'
           },
           {
-            name: 'Score (ascending)',
+            name: 'Score (lowest first)',
             property: 'rating',
             order: 'asc'
           },
           {
-            name: 'Title (descending)',
+            name: 'Title (Z-A)',
             property: 'title',
             order: 'desc'
           },
           {
-            name: 'Title (ascending)',
+            name: 'Title (A-Z)',
             property: 'title',
             order: 'asc'
           }
