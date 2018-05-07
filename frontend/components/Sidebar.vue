@@ -5,10 +5,14 @@
         AnimeTrends
       </div>
     </nuxt-link>
+
     <div class="search-container" @keydown.esc="filter = ''">
       <input class="search" type="text" placeholder="Search..." v-model="filter">
       <div class="clear-button" v-if="filter" @click="filter = ''">&times;</div>
     </div>
+
+    <SortTypeDropdown :types="sortTypes" @change="handleSortTypeChange" />
+
     <div class="tabs" :disabled="filterActive">
       <div class="tab" :class="{ active: currentTab === 'current' }" @click="(!filterActive) ? currentTab = 'current' : null">
         Current <span class="count">({{ counts.current }})</span>
@@ -17,7 +21,9 @@
         Archived <span class="count">({{ counts.archived }})</span>
       </div>
     </div>
+
     <transition mode="out-in" name="sidebar-transition">
+
       <div v-if="filterActive && !filteredLoading" class="list-container" key="filteredList">
         <div class="anime-list" v-if="this.anime.filtered.length">
           <div v-if="filteredCurrentItems.length">
@@ -33,6 +39,7 @@
           No results, sorry!
         </div>
       </div>
+
       <div v-else-if="!filterActive && anime.current.length && currentTab === 'current'" class="list-container" key="currentList" ref="currentContainer">
         <transition-group name="anime-list" tag="p">
           <ListItem class="anime-list-item" :item="item" v-for="item in anime.current" :key="item.id" />
@@ -43,6 +50,7 @@
           <SyncLoader color="rgba(255, 255, 255, 0.25)" size="10px" />
         </mugen-scroll>
       </div>
+
       <div v-else-if="!filterActive && anime.archived.length && currentTab === 'archived'" class="list-container" key="archivedList" ref="archivedContainer">
         <transition-group name="anime-list" tag="p">
           <ListItem class="anime-list-item" :item="item" v-for="item in anime.archived" :key="item.id" />
@@ -53,10 +61,13 @@
           <SyncLoader color="rgba(255, 255, 255, 0.25)" size="10px" />
         </mugen-scroll>
       </div>
+
       <div v-else class="loader-container" key="loader">
         <SyncLoader color="rgba(255, 255, 255, 0.25)" size="10px" />
       </div>
+
     </transition>
+
   </nav>
 </template>
 
@@ -65,6 +76,7 @@
   import MugenScroll from 'vue-mugen-scroll'
   import SyncLoader from 'vue-spinner/src/SyncLoader.vue'
   import ListItem from '~/components/ListItem.vue'
+  import SortTypeDropdown from '~/components/SortTypeDropdown.vue'
 
   const infiniteScrollChunkSize = 25
   let axiosCancelTokenSource = axios.CancelToken.source()
@@ -74,19 +86,59 @@
     components: {
       MugenScroll,
       SyncLoader,
-      ListItem
+      ListItem,
+      SortTypeDropdown
     },
 
     data () {
       return {
+
         anime: {
           current: [],
           archived: [],
           filtered: []
         },
+
         counts: {
 
         },
+
+        sortTypes: [
+          {
+            name: 'Members (descending)',
+            property: 'members',
+            order: 'desc'
+          },
+          {
+            name: 'Members (ascending)',
+            property: 'members',
+            order: 'asc'
+          },
+          {
+            name: 'Score (descending)',
+            property: 'rating',
+            order: 'desc'
+          },
+          {
+            name: 'Score (ascending)',
+            property: 'rating',
+            order: 'asc'
+          },
+          {
+            name: 'Title (descending)',
+            property: 'title',
+            order: 'desc'
+          },
+          {
+            name: 'Title (ascending)',
+            property: 'title',
+            order: 'asc'
+          }
+        ],
+
+        sortBy: 'members',
+        sortOrder: 'desc',
+
         currentTab: 'current',
         filter: '',
         filteredLoading: false,
@@ -95,11 +147,27 @@
     },
 
     mounted () {
-      axios.get('/anime', { params: { archived: 0, limit: infiniteScrollChunkSize }}).then(({ data }) => {
+      axios.get('/anime', {
+        params: {
+          archived: 0,
+          limit: infiniteScrollChunkSize,
+          sortBy: this.sortBy,
+          sortOrder: this.sortOrder
+        }
+      })
+      .then(({ data }) => {
         this.anime.current = data
       })
 
-      axios.get('/anime', { params: { archived: 1, limit: infiniteScrollChunkSize }}).then(({ data }) => {
+      axios.get('/anime', {
+        params: {
+          archived: 1,
+          limit: infiniteScrollChunkSize,
+          sortBy: this.sortBy,
+          sortOrder: this.sortOrder
+        }
+      })
+      .then(({ data }) => {
         this.anime.archived = data
       })
 
@@ -109,26 +177,8 @@
     },
 
     watch: {
-      filter: function (val) {
-        if (this.filteredLoading) {
-          axiosCancelTokenSource.cancel()
-        }
-
-        if (this.filterActive) {
-
-          this.filteredLoading = true
-          axiosCancelTokenSource = axios.CancelToken.source()
-
-          axios.get('/anime', {
-            params: { q: val },
-            cancelToken: axiosCancelTokenSource.token
-          })
-          .then(response => {
-            this.anime.filtered = response.data
-            this.filteredLoading = false
-          })
-          .catch(() => {})
-        }
+      filter: function () {
+        this.refreshFiltered()
       }
     },
 
@@ -140,7 +190,9 @@
           params: {
             archived: 1,
             offset: this.anime.archived.length,
-            limit: infiniteScrollChunkSize
+            limit: infiniteScrollChunkSize,
+            sortBy: this.sortBy,
+            sortOrder: this.sortOrder
           }
         })
         .then(({ data }) => {
@@ -155,13 +207,54 @@
           params: {
             archived: 0,
             offset: this.anime.current.length,
-            limit: infiniteScrollChunkSize
+            limit: infiniteScrollChunkSize,
+            sortBy: this.sortBy,
+            sortOrder: this.sortOrder
           }
         })
         .then(({ data }) => {
           this.infiniteScrollLoading = false
           this.anime.current.push(...data)
         })
+      },
+
+      refreshFiltered () {
+        if (this.filteredLoading) {
+          axiosCancelTokenSource.cancel()
+        }
+
+        if (this.filterActive) {
+
+          this.filteredLoading = true
+          axiosCancelTokenSource = axios.CancelToken.source()
+
+          axios.get('/anime', {
+            params: {
+              q: this.filter,
+              sortBy: this.sortBy,
+              sortOrder: this.sortOrder
+            },
+            cancelToken: axiosCancelTokenSource.token
+          })
+          .then(response => {
+            this.anime.filtered = response.data
+            this.filteredLoading = false
+          })
+          .catch(() => {})
+        }
+      },
+
+      handleSortTypeChange (newType) {
+        this.sortBy = newType.property
+        this.sortOrder = newType.order
+
+        this.anime.current = []
+        this.anime.archived = []
+        this.anime.filtered = []
+
+        this.fetchMoreCurrent()
+        this.fetchMoreArchived()
+        this.refreshFiltered()
       }
 
     },
@@ -298,7 +391,6 @@
       }
     }
 
-
     .tabs {
       align-self: stretch;
       display: flex;
@@ -361,6 +453,7 @@
       align-self: stretch;
       flex: 1 1 auto;
       overflow-x: hidden;
+      padding: 0.5rem 0;
 
       @include breakpoint-md {
         height: 100%;
@@ -368,8 +461,6 @@
 
       overflow-y: auto;
       .anime-list {
-        padding: 0.5rem 0;
-
         .list-header {
           padding: 1rem 0.5rem 0.5rem;
           text-transform: uppercase;
