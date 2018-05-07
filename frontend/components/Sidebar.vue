@@ -38,7 +38,8 @@
           <ListItem class="anime-list-item" :item="item" v-for="item in anime.current" :key="item.id" />
         </transition-group>
         <mugen-scroll :style="{ opacity: anime.current.length < counts.current ? 1 : 0 }"
-                      class="infinite-scroll" :handler="fetchMoreCurrent" :should-handle="!infiniteScrollLoading" scroll-container="currentContainer">
+                      class="infinite-scroll" :handler="fetchMoreCurrent" :should-handle="shouldLoadMoreCurrent"
+                      :scroll-container="isMobile ? null : 'currentContainer'">
           <SyncLoader color="rgba(255, 255, 255, 0.25)" size="10px" />
         </mugen-scroll>
       </div>
@@ -47,7 +48,8 @@
           <ListItem class="anime-list-item" :item="item" v-for="item in anime.archived" :key="item.id" />
         </transition-group>
         <mugen-scroll :style="{ opacity: anime.archived.length < counts.archived ? 1 : 0 }"
-                      class="infinite-scroll" :handler="fetchMoreArchived" :should-handle="!infiniteScrollLoading" scroll-container="archivedContainer">
+                      class="infinite-scroll" :handler="fetchMoreArchived" :should-handle="shouldLoadMoreArchived"
+                      :scroll-container="isMobile ? null : 'archivedContainer'">
           <SyncLoader color="rgba(255, 255, 255, 0.25)" size="10px" />
         </mugen-scroll>
       </div>
@@ -165,6 +167,19 @@
     },
 
     computed: {
+
+      isMobile () {
+        return window.innerWidth < 768
+      },
+
+      shouldLoadMoreCurrent () {
+        return !this.infiniteScrollLoading && (this.anime.current.length < this.counts.current)
+      },
+
+      shouldLoadMoreArchived () {
+        return !this.infiniteScrollLoading && (this.anime.archived.length < this.counts.archived)
+      },
+
       filterActive () {
         return (this.filter.length >= 2)
       },
