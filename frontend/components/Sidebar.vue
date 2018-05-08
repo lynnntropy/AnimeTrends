@@ -13,6 +13,13 @@
 
     <SortTypeDropdown :types="sortTypes" @change="handleSortTypeChange" />
 
+    <div class="language-toggle-container">
+      <toggle-button v-model="englishTitles" height="17" width="40"
+                     :color="{checked: 'rgba(255, 255, 255, 0.25)', unchecked: 'rgba(255, 255, 255, 0.1)'}"
+                      :sync="true"/>
+      <p @click="englishTitles = !englishTitles">Prefer English titles</p>
+    </div>
+
     <div class="tabs" :disabled="filterActive">
       <div class="tab" :class="{ active: currentTab === 'current' }" @click="(!filterActive) ? currentTab = 'current' : null">
         Current <span class="count">({{ counts.current }})</span>
@@ -28,11 +35,11 @@
         <div class="anime-list" v-if="this.anime.filtered.length">
           <div v-if="filteredCurrentItems.length">
             <div class="list-header">CURRENT</div>
-            <ListItem :item="item" v-for="item in filteredCurrentItems" :key="item.id" />
+            <ListItem :item="item" v-for="item in filteredCurrentItems" :key="item.id" :englishTitles="englishTitles"/>
           </div>
           <div v-if="filteredArchivedItems.length">
             <div class="list-header">ARCHIVED</div>
-            <ListItem :item="item" v-for="item in filteredArchivedItems" :key="item.id" />
+            <ListItem :item="item" v-for="item in filteredArchivedItems" :key="item.id" :englishTitles="englishTitles"/>
           </div>
         </div>
         <div v-else class="no-results-message">
@@ -42,7 +49,7 @@
 
       <div v-else-if="!filterActive && anime.current.length && currentTab === 'current'" class="list-container" key="currentList" ref="currentContainer">
         <transition-group name="anime-list" tag="p">
-          <ListItem class="anime-list-item" :item="item" v-for="item in anime.current" :key="item.id" />
+          <ListItem class="anime-list-item" :item="item" v-for="item in anime.current" :key="item.id" :englishTitles="englishTitles"/>
         </transition-group>
         <mugen-scroll :style="{ opacity: anime.current.length < counts.current ? 1 : 0 }"
                       class="infinite-scroll" :handler="fetchMoreCurrent" :should-handle="shouldLoadMoreCurrent"
@@ -53,7 +60,7 @@
 
       <div v-else-if="!filterActive && anime.archived.length && currentTab === 'archived'" class="list-container" key="archivedList" ref="archivedContainer">
         <transition-group name="anime-list" tag="p">
-          <ListItem class="anime-list-item" :item="item" v-for="item in anime.archived" :key="item.id" />
+          <ListItem class="anime-list-item" :item="item" v-for="item in anime.archived" :key="item.id" :englishTitles="englishTitles"/>
         </transition-group>
         <mugen-scroll :style="{ opacity: anime.archived.length < counts.archived ? 1 : 0 }"
                       class="infinite-scroll" :handler="fetchMoreArchived" :should-handle="shouldLoadMoreArchived"
@@ -138,6 +145,7 @@
 
         sortBy: 'members',
         sortOrder: 'desc',
+        englishTitles: false,
 
         currentTab: 'current',
         filter: '',
@@ -244,10 +252,7 @@
         }
       },
 
-      handleSortTypeChange (newType) {
-        this.sortBy = newType.property
-        this.sortOrder = newType.order
-
+      reloadAll() {
         this.anime.current = []
         this.anime.archived = []
         this.anime.filtered = []
@@ -255,8 +260,13 @@
         this.fetchMoreCurrent()
         this.fetchMoreArchived()
         this.refreshFiltered()
-      }
+      },
 
+      handleSortTypeChange (newType) {
+        this.sortBy = newType.property
+        this.sortOrder = newType.order
+        this.reloadAll()
+      }
     },
 
     computed: {
@@ -388,6 +398,19 @@
         font-size: 2rem;
         cursor: pointer;
         color: rgba(white, 0.35);
+      }
+    }
+
+    .language-toggle-container {
+      align-self: stretch;
+      margin: 0.1rem 1.5rem 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+
+      p {
+        margin-left: 0.5rem;
+        cursor: pointer;
       }
     }
 

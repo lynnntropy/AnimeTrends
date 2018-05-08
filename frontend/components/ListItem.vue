@@ -1,7 +1,7 @@
 <template>
   <nuxt-link :to="`/anime/${item.id}/${$options.filters.slugify(item.title)}`">
     <div class="list-item" >
-      <div class="title">{{ item.title }}</div>
+      <div class="title">{{ title }}</div>
       <div class="details">
         <ColoredRating :rating="item.rating" />
         &middot;
@@ -15,10 +15,20 @@
   import ColoredRating from '~/components/ColoredRating.vue'
 
   export default {
-    props: ['item'],
+    props: ['item', 'englishTitles'],
 
     components: {
       ColoredRating
+    },
+
+    computed: {
+      title () {
+        if (this.englishTitles && this.item.title_english) {
+          return this.item.title_english
+        } else {
+          return this.item.title
+        }
+      }
     }
   }
 </script>

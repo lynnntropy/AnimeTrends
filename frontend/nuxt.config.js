@@ -65,6 +65,7 @@ module.exports = {
     '~/plugins/filter-suffixed-number',
     '~/plugins/filter-round',
     '~/plugins/filter-slugify',
+    '~/plugins/vue-js-toggle-button',
 
     { src: '~/plugins/tracking-google-analytics', ssr: false },
   ],
