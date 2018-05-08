@@ -409,6 +409,7 @@
       flex-shrink: 0;
 
       p {
+        color: #ddd;
         margin-left: 0.5rem;
         cursor: pointer;
       }
