@@ -22,10 +22,10 @@
 
     <div class="tabs" :disabled="filterActive">
       <div class="tab" :class="{ active: currentTab === 'current' }" @click="(!filterActive) ? currentTab = 'current' : null">
-        Current <span class="count">({{ counts.current }})</span>
+        Current <span class="count" v-if="counts.current">({{ counts.current }})</span>
       </div>
       <div class="tab" :class="{ active: currentTab === 'archived' }" @click="(!filterActive) ? currentTab = 'archived' : null">
-        Archived <span class="count">({{ counts.archived }})</span>
+        Archived <span class="count" v-if="counts.archived">({{ counts.archived }})</span>
       </div>
     </div>
 
